@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { UsersService } from '../../services/users.service';
+import { UsersService } from '../../services/flask/users.service';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { SessionService } from '../../services/session.service';
+import { SessionService } from '../../services/flask/session.service';
 import { Router } from '@angular/router';
 
 @Component({

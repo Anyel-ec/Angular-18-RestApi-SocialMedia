@@ -1,14 +1,14 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { NavComponent } from '../../layouts/nav/nav.component';
-import { SessionService } from '../../services/session.service';
+import { SessionService } from '../../services/flask/session.service';
 import { FormsModule } from '@angular/forms';
-import { PostsService } from '../../services/posts.service';
+import { PostsService } from '../../services/flask/posts.service';
 import { HttpClientModule } from '@angular/common/http';
 import Swal from 'sweetalert2';
 import { CategoriesService } from '../../services/categories/categories.service';
 import { CommonModule } from '@angular/common';
-import { UsersService } from '../../services/users.service';
+import { UsersService } from '../../services/flask/users.service';
 import { Modal } from 'bootstrap';
 
 @Component({
@@ -103,6 +103,7 @@ export class HomeComponent implements OnInit {
     // Aquí puedes llamar a un servicio para guardar el estado del like en el backend si es necesario.
   }
 
+
   openComments(publication: any): void {
     this.selectedPublication = publication;
     this.newComment = '';
@@ -129,6 +130,7 @@ export class HomeComponent implements OnInit {
       response => {
         this.publications = response;
         this.publications.forEach(pub => {
+          pub.comments = pub.comments || []; // Asegurar que comments esté inicializado como un arreglo vacío si no existe
           this.usersService.getUserById(pub.usuario_id).subscribe(
             userResponse => {
               this.userMap[pub.usuario_id] = userResponse.name;
@@ -144,4 +146,5 @@ export class HomeComponent implements OnInit {
       }
     );
   }
+
 }

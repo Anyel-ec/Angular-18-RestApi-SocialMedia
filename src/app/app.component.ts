@@ -4,7 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { UserListComponent } from './components/user-list/user-list.component';
 import { LoginComponent } from './components/login/login.component';
 import { NavComponent } from './layouts/nav/nav.component';
-import { SessionService } from './services/session.service';
+import { SessionService } from './services/flask/session.service';
 
 @Component({
   selector: 'app-root',

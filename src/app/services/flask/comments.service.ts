@@ -12,4 +12,5 @@ export class CommentsService {
   getComments(): Observable<any> {
     return this.http.get<any>(this.apiUrl);
   }
+  
 }

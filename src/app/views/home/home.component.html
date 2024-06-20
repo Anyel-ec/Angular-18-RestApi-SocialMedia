@@ -4,7 +4,7 @@
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-md-6">
-      <div class="card" *ngIf="user">
+      <div class="card mb-5" *ngIf="user">
         <div class="card-header">
           <h2>Bienvenido, {{ user.name }}</h2>
           <p>{{ user.email }}</p>
@@ -26,50 +26,57 @@
 
             <div class="mb-3">
               <label for="postContent" class="form-label">Escribe tu post:</label>
-              <textarea class="form-control" id="postContent" rows="5" [(ngModel)]="post.content" name="content" placeholder="What's on your mind?" required></textarea>
+              <textarea class="form-control" id="postContent" rows="5" [(ngModel)]="post.content" name="content"
+                placeholder="What's on your mind?" required></textarea>
             </div>
             <button type="submit" class="btn btn-primary">
-              <i class="fas fa-share-square"></i> Post
+              <i class="fas fa-share-square me-2"></i> Post
             </button>
           </form>
         </div>
       </div>
 
       <!-- Tarjetas de Publicaciones -->
-      <div class="mt-4">
-        <div *ngFor="let publication of publications" class="card mb-3">
-          <div class="card-header">
-            <h5 class="card-title">{{ publication.title }}</h5>
-            <p class="card-subtitle mb-2 text-muted">{{ publication.time_created | date:'medium' }}</p>
-            <p class="card-subtitle mb-2 text-muted">Por: {{ getUserName(publication.usuario_id) }}</p>
+      <div *ngFor="let publication of publications" class="card mb-3">
+        <div class="card-header">
+          <h5 class="card-title">{{ publication.title }}</h5>
+          <p class="card-subtitle mb-2 text-muted">{{ publication.time_created | date:'medium' }}</p>
+          <p class="card-subtitle mb-2 text-muted">Por: {{ getUserName(publication.usuario_id) }}</p>
+        </div>
+        <div class="card-body">
+          <p class="card-text">{{ publication.content }}</p>
+          <p class="card-text">Categoría: {{ getCategoryName(publication.category_id) }}</p>
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <button class="btn btn-link text-decoration-none text-dark" (click)="toggleLike(publication)">
+                <i class="fas" [ngClass]="{'fa-heart': publication.liked, 'fa-face-meh-blank': !publication.liked}"
+                  [style.color]="publication.liked ? 'red' : ''"></i>
+                <span class="ms-1">{{ publication.num_likes }}</span>
+              </button>
+            </div>
+            <div>
+              <button class="btn btn-link text-decoration-none text-dark" (click)="openComments(publication)">
+                <i class="fas fa-comments"></i>
+                <span class="ms-1">{{ publication.comments.length }}</span>
+              </button>
+            </div>
           </div>
-          <div class="card-body">
-            <p class="card-text">{{ publication.content }}</p>
-            <p class="card-text">Categoría: {{ getCategoryName(publication.category_id) }}</p>
-            <div class="d-flex justify-content-between align-items-center">
-              <div>
-                <button class="btn btn-link p-0" (click)="toggleLike(publication)">
-                  <i class="fas" [ngClass]="{'fa-check-square': publication.liked, 'fa-square': !publication.liked}"></i> {{ publication.num_likes }}
-                </button>
-              </div>
-              <div>
-                <button class="btn btn-link p-0" (click)="openComments(publication)">
-                  <i class="fas fa-comments"></i> {{ publication.comments.length }}
-                </button>
-              </div>
-            </div>
-            <!-- Mostrar comentarios -->
-            <div *ngIf="selectedPublication === publication">
-              <hr>
-              <ul class="list-group mb-3">
-                <li *ngFor="let comment of publication.comments" class="list-group-item">{{ comment }}</li>
-              </ul>
-              <textarea class="form-control mb-3" [(ngModel)]="newComment" placeholder="Agregar un comentario..."></textarea>
-              <button type="button" class="btn btn-primary" (click)="addComment()">Agregar comentario</button>
-            </div>
+          <!-- Mostrar comentarios -->
+          <div *ngIf="selectedPublication === publication">
+            <hr>
+            <ul class="list-group mb-3">
+              <li *ngFor="let comment of publication.comments" class="list-group-item">{{ comment }}</li>
+            </ul>
+            <textarea class="form-control mb-3" [(ngModel)]="newComment"
+              placeholder="Agregar un comentario..."></textarea>
+            <button type="button" class="btn btn-primary" (click)="addComment()">Agregar comentario</button>
           </div>
         </div>
       </div>
+
+
+
+
     </div>
   </div>
 </div>
