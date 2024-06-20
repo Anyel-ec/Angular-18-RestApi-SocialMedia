@@ -17,4 +17,15 @@ export class PostsService {
   getPosts(): Observable<any> {
     return this.http.get<any>(this.apiUrl);
   }
+
+  deletePost(postId: number): Observable<any> {
+    const url = `${this.apiUrl}/${postId}`;
+    return this.http.delete<any>(url);
+  }
+  
+  updatePost(postId: number, postData: any): Observable<any> {
+    const url = `${this.apiUrl}/${postId}`;
+    return this.http.put<any>(url, postData);
+  }
+
 }

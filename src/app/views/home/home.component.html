@@ -27,7 +27,7 @@
             <div class="mb-3">
               <label for="postContent" class="form-label">Escribe tu post:</label>
               <textarea class="form-control" id="postContent" rows="5" [(ngModel)]="post.content" name="content"
-                placeholder="What's on your mind?" required></textarea>
+                placeholder="Qué tienes en mente?" required></textarea>
             </div>
             <button type="submit" class="btn btn-primary">
               <i class="fas fa-share-square me-2"></i> Post
@@ -38,10 +38,20 @@
 
       <!-- Tarjetas de Publicaciones -->
       <div *ngFor="let publication of publications" class="card mb-3">
-        <div class="card-header">
-          <h5 class="card-title">{{ publication.title }}</h5>
-          <p class="card-subtitle mb-2 text-muted">{{ publication.time_created | date:'medium' }}</p>
-          <p class="card-subtitle mb-2 text-muted">Por: {{ getUserName(publication.usuario_id) }}</p>
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <div>
+            <h5 class="card-title">{{ publication.title }}</h5>
+            <p class="card-subtitle mb-2 text-muted">{{ publication.time_created | date:'medium' }}</p>
+            <p class="card-subtitle mb-2 text-muted">Por: {{ getUserName(publication.usuario_id) }}</p>
+          </div>
+          <div>
+            <button class="btn btn-link text-decoration-none text-dark" (click)="toggleEditPublication(publication)">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn btn-link text-decoration-none text-dark" (click)="deletePublication(publication)">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </div>
         </div>
         <div class="card-body">
           <p class="card-text">{{ publication.content }}</p>
@@ -55,7 +65,7 @@
               </button>
             </div>
             <div>
-              <button class="btn btn-link text-decoration-none text-dark" (click)="openComments(publication)">
+              <button class="btn btn-link text-decoration-none text-dark" (click)="toggleComments(publication)">
                 <i class="fas fa-comments"></i>
                 <span class="ms-1">{{ publication.comments.length }}</span>
               </button>
@@ -72,11 +82,32 @@
             <button type="button" class="btn btn-primary" (click)="addComment()">Agregar comentario</button>
           </div>
         </div>
+
+        <!-- Formulario de Edición -->
+        <div *ngIf="editingPublication && editingPublication.id === publication.id" class="card-body">
+          <hr>
+          <form (submit)="onEditSubmit($event, editingPublication)">
+            <h4 class="text-success">Editar publicacion</h4>
+            <div class="mb-3">
+              <label for="editTitle" class="form-label">Título:</label>
+              <input type="text" class="form-control" id="editTitle" [(ngModel)]="editingPublication.title" name="editTitle" required>
+            </div>
+            <div class="mb-3">
+              <label for="editCategory" class="form-label">Categoría:</label>
+              <select class="form-control" id="editCategory" [(ngModel)]="editingPublication.category_id" name="editCategory" required>
+                <option [ngValue]="null" disabled>Seleccione una categoría</option>
+                <option *ngFor="let category of categories" [ngValue]="category.id">{{ category.name }}</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="editContent" class="form-label">Contenido:</label>
+              <textarea class="form-control" id="editContent" rows="5" [(ngModel)]="editingPublication.content" name="editContent" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-success">Guardar cambios</button>
+            <button type="button" class="btn btn-secondary" (click)="cancelEdit()">Cancelar</button>
+          </form>
+        </div>
       </div>
-
-
-
-
     </div>
   </div>
 </div>

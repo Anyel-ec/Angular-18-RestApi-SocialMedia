@@ -6,10 +6,10 @@ import { FormsModule } from '@angular/forms';
 import { PostsService } from '../../services/flask/posts.service';
 import { HttpClientModule } from '@angular/common/http';
 import Swal from 'sweetalert2';
-import { CategoriesService } from '../../services/categories/categories.service';
 import { CommonModule } from '@angular/common';
 import { UsersService } from '../../services/flask/users.service';
 import { Modal } from 'bootstrap';
+import { CategoriesService } from '../../services/flask/categories.service';
 
 @Component({
   selector: 'app-home',
@@ -34,6 +34,7 @@ export class HomeComponent implements OnInit {
   userMap: { [key: number]: string } = {};  // Mapa para almacenar los nombres de usuario
   selectedPublication: any = null;
   newComment: string = '';
+  editingPublication: any = null;
 
   constructor(
     private sessionService: SessionService,
@@ -103,10 +104,72 @@ export class HomeComponent implements OnInit {
     // Aquí puedes llamar a un servicio para guardar el estado del like en el backend si es necesario.
   }
 
-
   openComments(publication: any): void {
     this.selectedPublication = publication;
     this.newComment = '';
+  }
+
+  toggleEditPublication(publication: any): void {
+    if (this.editingPublication && this.editingPublication.id === publication.id) {
+      this.editingPublication = null;
+    } else {
+      this.editingPublication = { ...publication };
+    }
+  }
+
+
+  toggleComments(publication: any): void {
+    if (this.selectedPublication === publication) {
+      this.selectedPublication = null;
+    } else {
+      this.selectedPublication = publication;
+    }
+  }
+
+  editPublication(publication: any): void {
+    this.editingPublication = { ...publication };
+  }
+
+  deletePublication(publication: any): void {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: "¡No podrás revertir esto!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminarlo',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.postService.deletePost(publication.id).subscribe(
+          response => {
+            console.log('Publicación eliminada', response);
+            // Elimina la publicación de la lista local después de eliminarla del servidor
+            this.publications = this.publications.filter(p => p.id !== publication.id);
+            // Mostrar alerta de éxito
+            Swal.fire({
+              icon: 'success',
+              title: 'Publicación eliminada',
+              text: 'La publicación ha sido eliminada con éxito.',
+              showConfirmButton: false,
+              timer: 1500
+            });
+          },
+          error => {
+            console.error('Error al eliminar la publicación', error);
+            // Mostrar alerta de error
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Hubo un problema al eliminar la publicación.',
+              showConfirmButton: false,
+              timer: 1500
+            });
+          }
+        );
+      }
+    });
   }
 
   addComment(): void {
@@ -147,4 +210,74 @@ export class HomeComponent implements OnInit {
     );
   }
 
+  resetPostForm(): void {
+    this.post = {
+      title: '',
+      content: '',
+      category_id: null,
+      usuario_id: this.user.id,
+      time_created: ''
+    };
+  }
+
+  loadUserName(userId: number): void {
+    this.usersService.getUserById(userId).subscribe(
+      userResponse => {
+        this.userMap[userId] = userResponse.name;
+      },
+      error => {
+        console.error(`Error fetching user with id ${userId}:`, error);
+      }
+    );
+  }
+
+  loadPublications(): void {
+    this.postService.getPosts().subscribe(
+      response => {
+        this.publications = response;
+        this.publications.forEach(pub => {
+          pub.comments = pub.comments || [];
+          this.loadUserName(pub.usuario_id);
+        });
+      },
+      error => {
+        console.error('Error fetching posts:', error);
+      }
+    );
+  }
+
+  onEditSubmit(event: Event, publication: any): void {
+    event.preventDefault();
+
+    this.postService.updatePost(publication.id, publication).subscribe(
+      response => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Publicación actualizada',
+          text: 'Los cambios se han guardado correctamente.',
+          showConfirmButton: false,
+          timer: 1500,
+          position: 'top-end',
+          toast: true
+        });
+
+        this.cancelEdit();
+        this.loadPublications();
+      },
+      error => {
+        console.error('Error al actualizar la publicación', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Hubo un problema al guardar los cambios. Por favor, intenta nuevamente.',
+          showConfirmButton: false,
+          timer: 1500
+        });
+      }
+    );
+  }
+
+  cancelEdit(): void {
+    this.editingPublication = null;
+  }
 }
