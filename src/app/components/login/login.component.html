@@ -1,0 +1,36 @@
+<div class="container" id="container" [ngClass]="{'right-panel-active': isSignUp}">
+  <div class="form-container sign-in-container">
+    <form (submit)="login($event, email.value, password.value)">
+      <h1>Sign in</h1>
+      <input type="email" #email placeholder="Email" />
+      <input type="password" #password placeholder="Password" />
+      <a href="#">Forgot your password?</a>
+      <button type="submit">Sign In</button>
+    </form>
+  </div>
+  <div class="form-container sign-up-container">
+    <form (submit)="onRegisterFormSubmit(name.value, emailInput.value, password.value, phone.value, birthdate.value, $event);">
+      <h1>Create Account</h1>
+      <input type="text" #name placeholder="Name" />
+      <input type="email" #emailInput placeholder="Email" />
+      <input type="password" #passwordInput placeholder="Password" />
+      <input type="text" #phone placeholder="Phone" />
+      <input type="date" #birthdate placeholder="Birthdate" />
+      <button type="submit">Sign Up</button>
+    </form>
+  </div>
+  <div class="overlay-container">
+    <div class="overlay">
+      <div class="overlay-panel overlay-left">
+        <h1>Welcome Back!</h1>
+        <p>To keep connected with us please login with your personal info</p>
+        <button class="ghost" (click)="showSignIn()">Sign In</button>
+      </div>
+      <div class="overlay-panel overlay-right">
+        <h1>Hello, Friend!</h1>
+        <p>Enter your personal details and start journey with us</p>
+        <button class="ghost" (click)="showSignUp()">Sign Up</button>
+      </div>
+    </div>
+  </div>
+</div>
