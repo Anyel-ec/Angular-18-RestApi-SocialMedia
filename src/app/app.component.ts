@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { UserListComponent } from './components/user-list/user-list.component';
 import { LoginComponent } from './components/login/login.component';
@@ -18,14 +18,15 @@ export class AppComponent {
 
   currentUser: any;
 
-  constructor(private sessionService: SessionService) {
+  constructor(private sessionService: SessionService, private router: Router) {
     this.currentUser = this.sessionService.getUser();
   }
 
   logout(): void {
     this.sessionService.clearUser();
-    // Redirigir al usuario al componente de inicio de sesión, por ejemplo
+    this.router.navigate(['/']); // Redirigir al componente de inicio de sesión
   }
 
-  
+
+
 }
