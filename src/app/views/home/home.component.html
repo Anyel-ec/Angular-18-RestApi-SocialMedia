@@ -77,26 +77,39 @@
           <div *ngIf="selectedPublication">
             <h3>Comentarios</h3>
             <div *ngFor="let comment of selectedPublication.comments" class="comment-container">
-              <p>{{ comment.content }}</p>
-              <small>Publicado por: {{ getUserName(comment.userId) }} el {{ comment.timeCreated | date:'short'
-                }}</small>
-              <button (click)="toggleReply(comment)" class="btn btn-reply">Responder</button>
-
+              <div class="comment-content">
+                <p>{{ comment.content }}</p>
+                <small>Publicado por: {{ getUserName(comment.userId) }} el {{ comment.timeCreated | date:'short'
+                  }}</small>
+              </div>
+              <div class="comment-actions">
+                <!-- Botones de acción -->
+                <button (click)="toggleReply(comment)" class="btn btn-reply">Responder</button>
+                <button (click)="editComment(comment)" class="btn btn-edit">Editar</button>
+                <button (click)="deleteComment(comment)" class="btn btn-delete">Eliminar</button>
+              </div>
+              <!-- Cuadro de respuesta -->
               <div *ngIf="comment.showReplyBox" class="reply-box">
                 <textarea [(ngModel)]="comment.newReply" placeholder="Escribe una respuesta"
                   class="input-textarea"></textarea>
                 <button (click)="addReply(comment)" class="btn btn-add-reply">Agregar respuesta</button>
               </div>
 
+              <!-- Mostrar respuestas -->
               <div *ngFor="let reply of comment.comments" class="reply-container">
-                <p>{{ reply.content }}</p>
-                <small>Publicado por: {{ getUserName(reply.userId) }} el {{ reply.timeCreated | date:'short' }}</small>
+                <div class="reply-content">
+                  <p>{{ reply.content }}</p>
+                  <small>Publicado por: {{ getUserName(reply.userId) }} el {{ reply.timeCreated | date:'short'
+                    }}</small>
+                </div>
               </div>
             </div>
 
+            <!-- Cuadro para agregar nuevo comentario -->
             <textarea [(ngModel)]="newComment" placeholder="Escribe un comentario" class="input-textarea"></textarea>
             <button (click)="addComment()" class="btn btn-add-comment">Agregar comentario</button>
           </div>
+
 
 
 

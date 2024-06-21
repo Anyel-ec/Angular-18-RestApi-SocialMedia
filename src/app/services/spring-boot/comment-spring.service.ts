@@ -10,9 +10,6 @@ export class CommentSpringService {
 
   constructor(private http: HttpClient) {}
 
-  addComment(comment: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/save`, comment);
-  }
 
   // Método para agregar una respuesta a un comentario existente
   addResponse(commentId: number, response: Comment): Observable<Comment> {
@@ -23,9 +20,24 @@ export class CommentSpringService {
     return this.http.get(`${this.apiUrl}/post/${postId}`);
   }
 
-  addReplyToComment(commentId: number, reply: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/${commentId}/reply`, reply);
+  addComment(comment: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/save`, comment);
   }
+
+  addReplyToComment(id: number, reply: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/${id}/reply`, reply);
+  }
+
+
+  updateComment(id: number, comment: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}/update`, comment);
+  }
+
+  deleteComment(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}/delete`);
+  }
+
+
 
 
 }
