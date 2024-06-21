@@ -1,35 +1,74 @@
-<div class="container" id="container" [ngClass]="{'right-panel-active': isSignUp}">
+<div class="container mt-5" id="container" [ngClass]="{'right-panel-active': isSignUp}">
   <div class="form-container sign-in-container">
-    <form (submit)="login($event, email.value, password.value)">
-      <h1>Sign in</h1>
-      <input type="email" #email placeholder="Email" />
-      <input type="password" #password placeholder="Password" />
-      <a href="#">Forgot your password?</a>
-      <button type="submit">Sign In</button>
+    <form (submit)="login($event, email.value, password.value)" #loginForm="ngForm">
+      <h1>Iniciar Sesión</h1>
+      <input type="email" #email="ngModel" ngModel name="email" placeholder="Correo Electrónico" required email />
+      <div *ngIf="email.invalid && (email.dirty || email.touched)" class="small-error">
+        <small *ngIf="email.errors?.['required']">El correo electrónico es obligatorio.</small>
+        <small *ngIf="email.errors?.['email']">Debe ser un formato de correo válido.</small>
+      </div>
+
+      <input type="password" #password="ngModel" ngModel name="password" placeholder="Contraseña" required minlength="6" />
+      <div *ngIf="password.invalid && (password.dirty || password.touched)" class="small-error">
+        <small *ngIf="password.errors?.['required']">La contraseña es obligatoria.</small>
+        <small *ngIf="password.errors?.['minlength']">La contraseña debe tener al menos 6 caracteres.</small>
+      </div>
+
+      <a href="#">¿Olvidaste tu contraseña?</a>
+      <button type="submit" [disabled]="loginForm.invalid">Iniciar Sesión</button>
     </form>
   </div>
+
+
+
+
   <div class="form-container sign-up-container">
-    <form (submit)="onRegisterFormSubmit(name.value, emailInput.value, password.value, phone.value, birthdate.value, $event);">
-      <h1>Create Account</h1>
-      <input type="text" #name placeholder="Name" />
-      <input type="email" #emailInput placeholder="Email" />
-      <input type="password" #passwordInput placeholder="Password" />
-      <input type="text" #phone placeholder="Phone" />
-      <input type="date" #birthdate placeholder="Birthdate" />
-      <button type="submit">Sign Up</button>
+    <form [formGroup]="registerForm" (ngSubmit)="onRegisterFormSubmit($event)">
+      <h1>Crear Cuenta</h1>
+      <input type="text" formControlName="name" placeholder="Nombre" (input)="validateName()" />
+      <div *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched" class="small-error">
+        <small *ngIf="registerForm.get('name')?.errors?.['required']">El nombre es obligatorio.</small>
+        <small *ngIf="registerForm.get('name')?.errors?.['nombreInvalido']">El nombre solo puede contener letras y debe tener al menos 3 caracteres.</small>
+      </div>
+
+      <input type="email" formControlName="email" placeholder="Correo Electrónico" />
+      <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="small-error">
+        <small *ngIf="registerForm.get('email')?.errors?.['required']">El correo electrónico es obligatorio.</small>
+        <small *ngIf="registerForm.get('email')?.errors?.['correoInvalido']">Debe ser un formato de correo válido.</small>
+      </div>
+
+      <input type="password" formControlName="password" placeholder="Contraseña" />
+      <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="small-error">
+        <small *ngIf="registerForm.get('password')?.errors?.['required']">La contraseña es obligatoria.</small>
+        <small *ngIf="registerForm.get('password')?.errors?.['minlength']">La contraseña debe tener al menos 6 caracteres.</small>
+      </div>
+
+      <input type="text" formControlName="phone" placeholder="Teléfono" minlength="10" maxlength="10" (input)="validatePhone($event)" />
+      <div *ngIf="registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched" class="small-error">
+        <small *ngIf="registerForm.get('phone')?.errors?.['required']">El número de teléfono es obligatorio.</small>
+        <small *ngIf="registerForm.get('phone')?.errors?.['minlength'] || registerForm.get('phone')?.errors?.['maxlength']">Debe tener exactamente 10 dígitos</small>
+      </div>
+
+      <input type="date" formControlName="birthdate" placeholder="Fecha de Nacimiento" />
+      <div *ngIf="registerForm.get('birthdate')?.invalid && registerForm.get('birthdate')?.touched" class="small-error">
+        <small *ngIf="registerForm.get('birthdate')?.errors?.['required']">La fecha de nacimiento es obligatoria.</small>
+        <small *ngIf="registerForm.get('birthdate')?.errors?.['minimumAge']">Debes tener al menos 16 años.</small>
+      </div>
+
+      <button type="submit">Registrarse</button>
     </form>
   </div>
   <div class="overlay-container">
     <div class="overlay">
       <div class="overlay-panel overlay-left">
-        <h1>Welcome Back!</h1>
-        <p>To keep connected with us please login with your personal info</p>
-        <button class="ghost" (click)="showSignIn()">Sign In</button>
+        <h1>¡Bienvenido de nuevo!</h1>
+        <p>Para mantenerte conectado con nosotros, por favor inicia sesión con tu información personal</p>
+        <button class="ghost" (click)="showSignIn()">Iniciar Sesión</button>
       </div>
       <div class="overlay-panel overlay-right">
-        <h1>Hello, Friend!</h1>
-        <p>Enter your personal details and start journey with us</p>
-        <button class="ghost" (click)="showSignUp()">Sign Up</button>
+        <h1>¡Hola, Amigo!</h1>
+        <p>Ingresa tus datos personales y comienza el viaje con nosotros</p>
+        <button class="ghost" (click)="showSignUp()">Registrarse</button>
       </div>
     </div>
   </div>

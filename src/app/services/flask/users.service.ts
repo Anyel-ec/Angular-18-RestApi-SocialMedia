@@ -36,5 +36,11 @@ export class UsersService {
     return this.http.get<any>(url);
   }
 
+  getVerifyExitsUser(email: string): Observable<any> {
+    const url = 'http://localhost:5000/api/users/verify_exist';
+    const body = { email };
+    return this.http.post<any>(url, body);
+  }
+
 
 }

@@ -10,18 +10,20 @@ import { CommonModule } from '@angular/common';
 import { UsersService } from '../../services/flask/users.service';
 import { Modal } from 'bootstrap';
 import { CategoriesService } from '../../services/flask/categories.service';
+import { CommentSpringService } from '../../services/spring-boot/comment-spring.service';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [InputTextareaModule, NavComponent, FormsModule, HttpClientModule, CommonModule],
-  providers: [PostsService, CategoriesService, UsersService],
+  providers: [PostsService, CategoriesService, UsersService, CommentSpringService],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
 
 export class HomeComponent implements OnInit {
   user: any;
+
   post = {
     title: '',
     content: '',
@@ -29,6 +31,7 @@ export class HomeComponent implements OnInit {
     usuario_id: null,
     time_created: ''
   };
+
   categories: any[] = [];
   publications: any[] = [];
   userMap: { [key: number]: string } = {};  // Mapa para almacenar los nombres de usuario
@@ -40,9 +43,12 @@ export class HomeComponent implements OnInit {
     private sessionService: SessionService,
     private postService: PostsService,
     private usersService: UsersService,
-    private categoriesService: CategoriesService
+    private categoriesService: CategoriesService,
+    private commentService: CommentSpringService
   ) {}
 
+
+  // Método para cargar las publicaciones y categorías al iniciar el componente
   ngOnInit(): void {
     this.user = this.sessionService.getUser();
     this.post.usuario_id = this.user.id;
@@ -123,6 +129,7 @@ export class HomeComponent implements OnInit {
       this.selectedPublication = null;
     } else {
       this.selectedPublication = publication;
+      this.loadCommentsForPublication(publication);
     }
   }
 
@@ -173,9 +180,46 @@ export class HomeComponent implements OnInit {
   }
 
   addComment(): void {
-    if (this.newComment.trim()) {
-      this.selectedPublication.comments.push(this.newComment.trim());
-      this.newComment = '';
+    if (this.selectedPublication && this.newComment.trim()) {
+      const comment = {
+        id: null,
+        postId: this.selectedPublication.id,
+        userId: this.user.id,
+        content: this.newComment.trim(),
+        timeCreated: new Date().toISOString(),
+        comment: []
+      };
+
+      this.commentService.addComment(comment).subscribe(
+        response => {
+          console.log('Comentario agregado:', response);
+          this.selectedPublication.comments.push(response);
+          this.newComment = '';
+          Swal.fire({
+            icon: 'success',
+            title: 'Comentario agregado',
+            text: 'Tu comentario ha sido agregado exitosamente.',
+            showConfirmButton: false,
+            timer: 1500,
+            position: 'top-end',
+            toast: true
+          });
+        },
+        error => {
+          console.error('Error al agregar comentario:', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Hubo un problema al agregar tu comentario. Por favor, intenta nuevamente.',
+            showConfirmButton: false,
+            timer: 1500,
+            position: 'top-end',
+            toast: true
+          });
+        }
+      );
+
+
     }
   }
 
@@ -188,12 +232,24 @@ export class HomeComponent implements OnInit {
     return this.userMap[userId] || 'Usuario desconocido';
   }
 
+  loadCommentsForPublication(publication: any): void {
+    this.commentService.getCommentsByPostId(publication.id).subscribe(
+      response => {
+        publication.comments = response;
+      },
+      error => {
+        console.error(`Error fetching comments for post ${publication.id}:`, error);
+      }
+    );
+  }
+
   loadPosts(): void {
     this.postService.getPosts().subscribe(
       response => {
         this.publications = response;
         this.publications.forEach(pub => {
           pub.comments = pub.comments || []; // Asegurar que comments esté inicializado como un arreglo vacío si no existe
+          this.loadCommentsForPublication(pub); // Cargar comentarios para cada publicación
           this.usersService.getUserById(pub.usuario_id).subscribe(
             userResponse => {
               this.userMap[pub.usuario_id] = userResponse.name;
@@ -280,4 +336,54 @@ export class HomeComponent implements OnInit {
   cancelEdit(): void {
     this.editingPublication = null;
   }
+
+
+  toggleReply(comment: any): void {
+    comment.showReplyBox = !comment.showReplyBox;
+    comment.newReply = '';
+  }
+
+  addReply(comment: any): void {
+    if (comment.newReply.trim()) {
+      const reply = {
+        id: null,
+        commentId: comment.id,
+        userId: this.user.id,
+        content: comment.newReply.trim(),
+        timeCreated: new Date().toISOString()
+      };
+
+      this.commentService.addReplyToComment(comment.id, reply).subscribe(
+        response => {
+          console.log('Respuesta agregada:', response);
+          comment.comments.push(response);
+          comment.newReply = '';
+          comment.showReplyBox = false;
+          Swal.fire({
+            icon: 'success',
+            title: 'Respuesta agregada',
+            text: 'Tu respuesta ha sido agregada exitosamente.',
+            showConfirmButton: false,
+            timer: 1500,
+            position: 'top-end',
+            toast: true
+          });
+        },
+        error => {
+          console.error('Error al agregar respuesta:', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Hubo un problema al agregar tu respuesta. Por favor, intenta nuevamente.',
+            showConfirmButton: false,
+            timer: 1500,
+            position: 'top-end',
+            toast: true
+          });
+        }
+      );
+    }
+  }
+
+
 }

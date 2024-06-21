@@ -1,7 +1,7 @@
 <app-nav></app-nav>
 
 <hr class="mt-5">
-<div class="container">
+<div class="container mt-5">
   <div class="row justify-content-center">
     <div class="col-md-6">
       <div class="card mb-5" *ngIf="user">
@@ -71,16 +71,37 @@
               </button>
             </div>
           </div>
+
+
           <!-- Mostrar comentarios -->
-          <div *ngIf="selectedPublication === publication">
-            <hr>
-            <ul class="list-group mb-3">
-              <li *ngFor="let comment of publication.comments" class="list-group-item">{{ comment }}</li>
-            </ul>
-            <textarea class="form-control mb-3" [(ngModel)]="newComment"
-              placeholder="Agregar un comentario..."></textarea>
-            <button type="button" class="btn btn-primary" (click)="addComment()">Agregar comentario</button>
+          <div *ngIf="selectedPublication">
+            <h3>Comentarios</h3>
+            <div *ngFor="let comment of selectedPublication.comments" class="comment-container">
+              <p>{{ comment.content }}</p>
+              <small>Publicado por: {{ getUserName(comment.userId) }} el {{ comment.timeCreated | date:'short'
+                }}</small>
+              <button (click)="toggleReply(comment)" class="btn btn-reply">Responder</button>
+
+              <div *ngIf="comment.showReplyBox" class="reply-box">
+                <textarea [(ngModel)]="comment.newReply" placeholder="Escribe una respuesta"
+                  class="input-textarea"></textarea>
+                <button (click)="addReply(comment)" class="btn btn-add-reply">Agregar respuesta</button>
+              </div>
+
+              <div *ngFor="let reply of comment.comments" class="reply-container">
+                <p>{{ reply.content }}</p>
+                <small>Publicado por: {{ getUserName(reply.userId) }} el {{ reply.timeCreated | date:'short' }}</small>
+              </div>
+            </div>
+
+            <textarea [(ngModel)]="newComment" placeholder="Escribe un comentario" class="input-textarea"></textarea>
+            <button (click)="addComment()" class="btn btn-add-comment">Agregar comentario</button>
           </div>
+
+
+
+
+
         </div>
 
         <!-- Formulario de Edición -->
@@ -90,18 +111,21 @@
             <h4 class="text-success">Editar publicacion</h4>
             <div class="mb-3">
               <label for="editTitle" class="form-label">Título:</label>
-              <input type="text" class="form-control" id="editTitle" [(ngModel)]="editingPublication.title" name="editTitle" required>
+              <input type="text" class="form-control" id="editTitle" [(ngModel)]="editingPublication.title"
+                name="editTitle" required>
             </div>
             <div class="mb-3">
               <label for="editCategory" class="form-label">Categoría:</label>
-              <select class="form-control" id="editCategory" [(ngModel)]="editingPublication.category_id" name="editCategory" required>
+              <select class="form-control" id="editCategory" [(ngModel)]="editingPublication.category_id"
+                name="editCategory" required>
                 <option [ngValue]="null" disabled>Seleccione una categoría</option>
                 <option *ngFor="let category of categories" [ngValue]="category.id">{{ category.name }}</option>
               </select>
             </div>
             <div class="mb-3">
               <label for="editContent" class="form-label">Contenido:</label>
-              <textarea class="form-control" id="editContent" rows="5" [(ngModel)]="editingPublication.content" name="editContent" required></textarea>
+              <textarea class="form-control" id="editContent" rows="5" [(ngModel)]="editingPublication.content"
+                name="editContent" required></textarea>
             </div>
             <button type="submit" class="btn btn-success">Guardar cambios</button>
             <button type="button" class="btn btn-secondary" (click)="cancelEdit()">Cancelar</button>

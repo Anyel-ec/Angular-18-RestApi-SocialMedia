@@ -10,13 +10,22 @@ export class CommentSpringService {
 
   constructor(private http: HttpClient) {}
 
-  // Método para agregar un comentario principal
-  addComment(comment: Comment): Observable<Comment> {
-    return this.http.post<Comment>(`${this.apiUrl}/save`, comment);
+  addComment(comment: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/save`, comment);
   }
 
   // Método para agregar una respuesta a un comentario existente
   addResponse(commentId: number, response: Comment): Observable<Comment> {
     return this.http.put<Comment>(`${this.apiUrl}/${commentId}/response`, response);
   }
+
+  getCommentsByPostId(postId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/post/${postId}`);
+  }
+
+  addReplyToComment(commentId: number, reply: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/${commentId}/reply`, reply);
+  }
+
+
 }
