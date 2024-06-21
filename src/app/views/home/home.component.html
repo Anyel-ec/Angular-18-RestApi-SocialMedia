@@ -77,38 +77,55 @@
           <div *ngIf="selectedPublication">
             <h3>Comentarios</h3>
             <div *ngFor="let comment of selectedPublication.comments" class="comment-container">
-              <div class="comment-content">
+              <div *ngIf="!comment.isEditing" class="comment-content">
                 <p>{{ comment.content }}</p>
-                <small>Publicado por: {{ getUserName(comment.userId) }} el {{ comment.timeCreated | date:'short'
-                  }}</small>
+                <small>Publicado por: {{ getUserName(comment.userId) }} el {{ comment.timeCreated | date:'short' }}</small>
               </div>
-              <div class="comment-actions">
-                <!-- Botones de acción -->
-                <button (click)="toggleReply(comment)" class="btn btn-reply">Responder</button>
-                <button (click)="editComment(comment)" class="btn btn-edit">Editar</button>
-                <button (click)="deleteComment(comment)" class="btn btn-delete">Eliminar</button>
+
+              <div *ngIf="comment.isEditing" class="edit-comment-form">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <button (click)="saveEditedComment(comment)" class="btn btn-save">
+                    <i class="fas fa-save text-success"></i> Guardar
+                  </button>
+                  <button (click)="cancelEditComment(comment)" class="btn btn-cancel">
+                    <i class="fas fa-times text-danger"></i> Cancelar
+                  </button>
+                </div>
+                <textarea [(ngModel)]="comment.editContent" placeholder="Edita tu comentario" class="form-control"></textarea>
               </div>
-              <!-- Cuadro de respuesta -->
+
+
+              <div class="comment-actions d-flex justify-content-between align-items-center">
+                <button (click)="toggleReply(comment)" class="btn btn-reply">
+                  <i class="fas fa-reply"></i>
+                </button>
+                <div>
+                  <button (click)="startEditComment(comment)" class="btn btn-edit ms-2">
+                    <i class="fas fa-edit text-success "></i> Editar
+                  </button>
+                  <button (click)="deleteComment(comment)" class="btn btn-delete ms-2">
+                    <i class="fas fa-trash text-danger"></i> Eliminar
+                  </button>
+                </div>
+              </div>
+              
               <div *ngIf="comment.showReplyBox" class="reply-box">
-                <textarea [(ngModel)]="comment.newReply" placeholder="Escribe una respuesta"
-                  class="input-textarea"></textarea>
+                <textarea [(ngModel)]="comment.newReply" placeholder="Escribe una respuesta" class="input-textarea"></textarea>
                 <button (click)="addReply(comment)" class="btn btn-add-reply">Agregar respuesta</button>
               </div>
 
-              <!-- Mostrar respuestas -->
               <div *ngFor="let reply of comment.comments" class="reply-container">
                 <div class="reply-content">
                   <p>{{ reply.content }}</p>
-                  <small>Publicado por: {{ getUserName(reply.userId) }} el {{ reply.timeCreated | date:'short'
-                    }}</small>
+                  <small>Publicado por: {{ getUserName(reply.userId) }} el {{ reply.timeCreated | date:'short' }}</small>
                 </div>
               </div>
             </div>
 
-            <!-- Cuadro para agregar nuevo comentario -->
             <textarea [(ngModel)]="newComment" placeholder="Escribe un comentario" class="input-textarea"></textarea>
             <button (click)="addComment()" class="btn btn-add-comment">Agregar comentario</button>
           </div>
+
 
 
 
