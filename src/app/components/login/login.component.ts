@@ -3,7 +3,7 @@ import { UsersService } from '../../services/flask/users.service';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { SessionService } from '../../services/flask/session.service';
+import { SessionService } from '../../services/shared/session.service';
 import { Router } from '@angular/router';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 

@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { NavComponent } from '../../layouts/nav/nav.component';
-import { SessionService } from '../../services/flask/session.service';
+import { SessionService } from '../../services/shared/session.service';
 import { FormsModule } from '@angular/forms';
 import { PostsService } from '../../services/flask/posts.service';
 import { HttpClientModule } from '@angular/common/http';

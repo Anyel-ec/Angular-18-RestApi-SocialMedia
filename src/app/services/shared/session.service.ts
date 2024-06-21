@@ -25,4 +25,5 @@ export class SessionService {
       sessionStorage.removeItem('user');
     }
   }
+
 }
