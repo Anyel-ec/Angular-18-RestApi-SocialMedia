@@ -6,6 +6,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { SessionService } from '../../services/shared/session.service';
 import { Router } from '@angular/router';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { UserDjangoService } from '../../services/django/user-django.service';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,7 @@ import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, Reac
   styleUrls: ['./login.component.scss'],
   standalone: true,
   imports: [CommonModule, HttpClientModule, FormsModule, ReactiveFormsModule ],
-  providers: [UsersService],
+  providers: [UsersService, UserDjangoService],
 
 })
 export class LoginComponent {
@@ -22,8 +23,8 @@ export class LoginComponent {
   registerForm: FormGroup;
 
   constructor(
-    private userService: UsersService,
     private sessionService: SessionService,
+    private userDjangoService: UserDjangoService,
     private router: Router,
     private fb: FormBuilder
   ) {
@@ -113,14 +114,14 @@ export class LoginComponent {
   login(event: Event, email: string, password: string): void {
     event.preventDefault();
 
-    this.userService.login(email, password).subscribe(
+    this.userDjangoService.login(email, password).subscribe(
       response => {
         Swal.fire({
           icon: 'success',
           title: 'Inicio de sesión correcto!',
           text: response.message,
         });
-        this.userService.getUserByEmail(email).subscribe(
+        this.userDjangoService.getUserByEmail(email).subscribe(
           userData => {
             this.sessionService.setUser(userData);
             this.router.navigate(['/inicio']);
@@ -146,7 +147,7 @@ export class LoginComponent {
     if (this.registerForm.valid) {
       const user = this.registerForm.value;
 
-      this.userService.getVerifyExitsUser(user.email).subscribe(
+      this.userDjangoService.getVerifyExitsUser(user.email).subscribe(
         response => {
           // Si la respuesta es 200, el usuario ya existe
           if (response.message === 'User exists') {
@@ -160,7 +161,7 @@ export class LoginComponent {
         error => {
           // Si la respuesta es 404, el usuario no existe y se permite registrar
           if (error.status === 404) {
-            this.userService.register(user).subscribe(
+            this.userDjangoService.register(user).subscribe(
               response => {
                 Swal.fire({
                   icon: 'success',
