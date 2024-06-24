@@ -43,7 +43,6 @@ export class LoginComponent {
     if (!correo) {
       return null;
     }
-
     const expresionRegular = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     if (expresionRegular.test(correo)) {
       return null;
@@ -51,9 +50,6 @@ export class LoginComponent {
       return { correoInvalido: true };
     }
   }
-
-
-
 
   private validarNombreCompleto(control: AbstractControl): ValidationErrors | null {
     const nombre = control.value;
@@ -72,6 +68,7 @@ export class LoginComponent {
       return { nombreInvalido: true };
     }
   }
+
   validateName(): void {
     const nameControl = this.registerForm.get('name');
     if (nameControl) {
@@ -113,14 +110,15 @@ export class LoginComponent {
 
   login(event: Event, email: string, password: string): void {
     event.preventDefault();
-
     this.userDjangoService.login(email, password).subscribe(
       response => {
+
         Swal.fire({
           icon: 'success',
           title: 'Inicio de sesión correcto!',
           text: response.message,
         });
+        
         this.userDjangoService.getUserByEmail(email).subscribe(
           userData => {
             this.sessionService.setUser(userData);

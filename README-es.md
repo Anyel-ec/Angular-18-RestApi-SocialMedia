@@ -2,10 +2,9 @@
 - [Español (Spanish)](README-es.md)
 - [English](README.md)
 
-# Social Media Front-End Project
+# Proyecto de Front-End de Redes Sociales
 
-This project is a front-end implementation of a social media platform that interacts with microservices built using Flask and Spring Boot. The application allows users to register, log in, create posts, and comment on posts. The front-end is developed using Angular.
-
+Este proyecto es una implementación de front-end de una plataforma de redes sociales que interactúa con microservicios construidos con Flask y Spring Boot. La aplicación permite a los usuarios registrarse, iniciar sesión, crear publicaciones y comentar en publicaciones. El front-end está desarrollado usando Angular.
 
 ## RESULTS
 ### Login 
@@ -17,66 +16,65 @@ This project is a front-end implementation of a social media platform that inter
 ### Login 
 ![Alt text](docs/alert.png)
 
+## Tabla de Contenidos
 
-## Table of Contents
+- [Características](#características)
+- [Tecnologías Usadas](#tecnologías-usadas)
+- [Configuración e Instalación](#configuración-e-instalación)
+- [Estructura del Proyecto](#estructura-del-proyecto)
+- [Servicios](#servicios)
+- [Componentes](#componentes)
+- [Contribuyendo](#contribuyendo)
+- [Licencia](#licencia)
 
-- [Features](#features)
-- [Technologies Used](#technologies-used)
-- [Setup and Installation](#setup-and-installation)
-- [Project Structure](#project-structure)
-- [Services](#services)
-- [Components](#components)
-- [Contributing](#contributing)
-- [License](#license)
+## Características
 
-## Features
+- Autenticación de Usuarios: Registro, inicio de sesión y gestión de sesiones.
+- Gestión de Publicaciones: Crear, leer, actualizar y eliminar publicaciones.
+- Gestión de Comentarios: Agregar, editar, eliminar y responder a comentarios.
+- Categorías: Obtener y mostrar categorías para publicaciones.
+- Perfiles de Usuario: Obtener detalles de usuarios y gestionar perfiles de usuarios.
 
-- User Authentication: Register, login, and session management.
-- Post Management: Create, read, update, and delete posts.
-- Comment Management: Add, edit, delete, and reply to comments.
-- Categories: Fetch and display categories for posts.
-- User Profiles: Fetch user details and manage user profiles.
-
-## Technologies Used
+## Tecnologías Usadas
 
 - **Front-End:** Angular, TypeScript, HTML, CSS
-- **Back-End Microservices:** Flask, Spring Boot
-- **HTTP Client:** Angular HttpClient
-- **UI Components:** PrimeNG, Bootstrap
-- **Notifications:** SweetAlert2
+- **Microservicios Back-End:** Flask, Spring Boot
+- **Cliente HTTP:** Angular HttpClient
+- **Componentes UI:** PrimeNG, Bootstrap
+- **Notificaciones:** SweetAlert2
 
-## Setup and Installation
+## Configuración e Instalación
 
-### Prerequisites
+### Prerrequisitos
 
-- Node.js and npm installed
-- Angular CLI installed
-- Back-end microservices running (Flask on port 5000, Spring Boot on port 8080)
+- Node.js y npm instalados
+- Angular CLI instalado
+- Microservicios back-end en funcionamiento (Flask en el puerto 5000, Spring Boot en el puerto 8080)
 
-### Installation
+### Instalación
 
-1. Clone the repository:
+1. Clona el repositorio:
 
     ```bash
     git clone https://github.com/Anyel-ec/Angular-18-RestApi-SocialMedia
     cd Angular-18-RestApi-SocialMedia
     ```
 
-2. Install dependencies:
+2. Instala las dependencias:
 
     ```bash
     npm install
     ```
 
-3. Run the Angular application:
+3. Ejecuta la aplicación Angular:
 
     ```bash
     ng serve
     ```
 
-4. Access the application at `http://localhost:4200`.
+4. Accede a la aplicación en `http://localhost:4200`.
 
-## Project Structure
+## Estructura del Proyecto
 
 ```
 src/
@@ -116,11 +114,11 @@ src/
 
 ```
 
-## Services
+## Servicios
 
 ### CategoriesService
 
-Handles operations related to categories.
+Maneja operaciones relacionadas con categorías.
 
 ```typescript
 @Injectable({
@@ -139,7 +137,7 @@ export class CategoriesService {
 
 ### CommentsService
 
-Handles operations related to comments in Flask.
+Maneja operaciones relacionadas con comentarios en Flask.
 
 ```typescript
 @Injectable({
@@ -158,7 +156,7 @@ export class CommentsService {
 
 ### PostsService
 
-Handles operations related to posts.
+Maneja operaciones relacionadas con publicaciones.
 
 ```typescript
 @Injectable({
@@ -191,7 +189,7 @@ export class PostsService {
 
 ### UsersService
 
-Handles operations related to users.
+Maneja operaciones relacionadas con usuarios.
 
 ```typescript
 @Injectable({
@@ -237,7 +235,7 @@ export class UsersService {
 
 ### CommentSpringService
 
-Handles operations related to comments in Spring Boot.
+Maneja operaciones relacionadas con comentarios en Spring Boot.
 
 ```typescript
 @Injectable({
@@ -276,7 +274,7 @@ export class CommentSpringService {
 
 ### SessionService
 
-Manages user session data.
+Maneja los datos de la sesión del usuario.
 
 ```typescript
 @Injectable({
@@ -305,11 +303,11 @@ export class SessionService {
 }
 ```
 
-## Components
+## Componentes
 
 ### LoginComponent
 
-Handles user login and registration.
+Maneja el inicio de sesión y el registro de usuarios.
 
 ```typescript
 @Component({
@@ -327,7 +325,7 @@ export class LoginComponent {
 
 ### NavComponent
 
-Handles navigation bar and user logout.
+Maneja la barra de navegación y el cierre de sesión de usuarios.
 
 ```typescript
 @Component({
@@ -345,10 +343,12 @@ export class NavComponent {
 
 ### HomeComponent
 
-Main component for displaying posts and comments.
+Componente principal para mostrar publicaciones y comentarios.
 
 ```typescript
-@Component({
+@Component
+
+({
   selector: 'app-home',
   standalone: true,
   imports: [InputTextareaModule, NavComponent, FormsModule, HttpClientModule, CommonModule],
@@ -361,6 +361,6 @@ export class HomeComponent {
 }
 ```
 
-## Contributing
+## Contribuyendo
 
-Contributions are welcome! Please read the [contributing guidelines](CONTRIBUTING.md) for more information.
+¡Las contribuciones son bienvenidas! Por favor, lee las [directrices de contribución](CONTRIBUTING.md) para más información.
