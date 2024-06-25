@@ -1,0 +1,165 @@
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.top-4 {
+  top: 1rem; /* Ajustar según sea necesario */
+}
+
+.right-4 {
+  right: 1rem; /* Ajustar según sea necesario */
+}
+
+.object-cover {
+  object-fit: cover;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.max-w-md {
+  max-width: 28rem; /* Ajustar según sea necesario */
+}
+
+.rounded-lg {
+  border-radius: 0.5rem; /* Ajustar según sea necesario */
+}
+
+.shadow-md {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ajustar según sea necesario */
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.p-6 {
+  padding: 1.5rem; /* Ajustar según sea necesario */
+}
+
+.space-y-4 > :not(:last-child) {
+  margin-bottom: 1rem; /* Ajustar según sea necesario */
+}
+
+.text-2xl {
+  font-size: 1.5rem; /* Ajustar según sea necesario */
+}
+
+.font-bold {
+  font-weight: bold;
+}
+
+.text-muted-foreground {
+  color: #6b7280; /* Ajustar según sea necesario */
+}
+
+.flex {
+  display: flex;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.text-sm {
+  font-size: 0.875rem; /* Ajustar según sea necesario */
+}
+
+.gap-4 {
+  gap: 1rem; /* Ajustar según se.relative {
+    position: relative;
+  }
+
+  .absolute {
+    position: absolute;
+  }
+
+  .object-cover {
+    object-fit: cover;
+  }
+
+  .w-full {
+    width: 100%;
+  }
+
+  .max-w-md {
+    max-width: 28rem; /* Ajustar según sea necesario */
+  }
+
+  .rounded-lg {
+    border-radius: 0.5rem; /* Ajustar según sea necesario */
+  }
+
+  .shadow-md {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ajustar según sea necesario */
+  }
+
+  .overflow-hidden {
+    overflow: hidden;
+  }
+
+  .p-6 {
+    padding: 1.5rem; /* Ajustar según sea necesario */
+  }
+
+  .p-4 {
+    padding: 1rem; /* Ajustar según sea necesario */
+  }
+
+  .space-y-4 > :not(:last-child) {
+    margin-bottom: 1rem; /* Ajustar según sea necesario */
+  }
+
+  .text-2xl {
+    font-size: 1.5rem; /* Ajustar según sea necesario */
+  }
+
+  .font-bold {
+    font-weight: bold;
+  }
+
+  .text-muted-foreground {
+    color: #6b7280; /* Ajustar según sea necesario */
+  }
+
+  .flex {
+    display: flex;
+  }
+
+  .items-center {
+    align-items: center;
+  }
+
+  .text-sm {
+    font-size: 0.875rem; /* Ajustar según sea necesario */
+  }
+
+  .gap-4 {
+    gap: 1rem; /* Ajustar según sea necesario */
+  }
+
+  .ml-2 {
+    margin-left: 0.5rem; /* Ajustar según sea necesario */
+  }
+
+  .mr-2 {
+    margin-right: 0.5rem; /* Ajustar según sea necesario */
+  }
+
+  .mb-4 {
+    margin-bottom: 1rem; /* Ajustar según sea necesario */
+  }
+
+  .justify-between {
+    justify-content: space-between;
+  }
+
+  .ml-auto {
+    margin-left: auto; /* Alinear a la derecha */
+  }
+  

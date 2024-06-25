@@ -1,32 +1,45 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">Mi Aplicación</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/inicio" routerLinkActive="active">Inicio</a>
-      </li>
-      <!-- Aquí puedes agregar más elementos de menú según tu aplicación -->
-    </ul>
-    <ul class="navbar-nav ml-auto">
-      <ng-container *ngIf="user; else loggedOut">
+<!-- src/app/navbar/navbar.component.html -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top mb-5">
+  <!-- Container wrapper -->
+  <div class="container d-flex justify-content-between align-items-center">
+    <!-- Navbar brand -->
+    <a class="navbar-brand" href="#"><i class="fab fa-linkedin fa-2x"></i></a>
+
+    <!-- Collapsible wrapper -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <!-- Left links -->
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 d-flex align-items-center">
         <li class="nav-item">
-          <a class="nav-link" href="#">{{ user.name }}</a>
+          <a class="nav-link active d-flex flex-column text-center" aria-current="page" routerLink="/inicio" routerLinkActive="active">
+            <i class="fas fa-home fa-lg"></i><span class="small">Inicio</span>
+          </a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" (click)="clearSession()" href="#">Cerrar Sesión</a>
+
+        <li class="nav-item dropdown" *ngIf="user; else loggedOut">
+          <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <img [src]="user.avatar" class="rounded-circle" height="30" alt="Avatar" loading="lazy" />
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <!-- Aquí puedes agregar más elementos del dropdown -->
+            <!--
+            <li><a class="dropdown-item" href="#">Mi perfil</a></li>
+            <li><a class="dropdown-item" href="#">Configuración</a></li>
+            -->
+            <li><a class="dropdown-item" (click)="clearSession()">Cerrar Sesión</a></li>
+          </ul>
         </li>
-      </ng-container>
-      <ng-template #loggedOut>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/login" routerLinkActive="active">Iniciar Sesión</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/registro" routerLinkActive="active">Registrarse</a>
-        </li>
-      </ng-template>
-    </ul>
+        <ng-template #loggedOut>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/login" routerLinkActive="active">Iniciar Sesión</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/registro" routerLinkActive="active">Registrarse</a>
+          </li>
+        </ng-template>
+      </ul>
+      <!-- Left links -->
+    </div>
+    <!-- Collapsible wrapper -->
   </div>
+  <!-- Container wrapper -->
 </nav>

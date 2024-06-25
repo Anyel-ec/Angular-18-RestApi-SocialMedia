@@ -1,0 +1,42 @@
+<hr class="mb-3">
+<mat-card class="w-full max-w-md rounded-lg shadow-md overflow-hidden mt-5">
+  <div class="relative p-4">
+    <div class="flex justify-between items-center mb-4">
+      <div class="flex items-center text-sm text-muted-foreground">
+        <mat-icon class="mr-2">person</mat-icon>
+        <span>John Doe</span>
+        <span class="ml-2 text-muted-foreground">June 25, 2024</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button mat-icon-button [matMenuTriggerFor]="menu" class="ml-auto">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item>
+            <mat-icon>delete</mat-icon>
+            <span>Delete</span>
+          </button>
+          <button mat-menu-item>
+            <mat-icon>edit</mat-icon>
+            <span>Edit</span>
+          </button>
+        </mat-menu>
+      </div>
+    </div>
+    <img src="https://avatars.githubusercontent.com/u/47194128?v=4" alt="Blog post cover image" width="400" height="200" class="object-cover w-full" />
+  </div>
+  <mat-card-content class="p-6 space-y-4">
+    <mat-card-title class="text-2xl font-bold">The Future of Web Development: Embracing the Power of AI</mat-card-title>
+    <p class="text-muted-foreground">
+      Discover how AI is transforming the landscape of web development, empowering developers to create more efficient and innovative applications.
+    </p>
+    <div class="flex items-center gap-4">
+      <button mat-icon-button>
+        <mat-icon>favorite_border</mat-icon>
+      </button>
+      <button mat-icon-button>
+        <mat-icon>comment</mat-icon>
+      </button>
+    </div>
+  </mat-card-content>
+</mat-card>
