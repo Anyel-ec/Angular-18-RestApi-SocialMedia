@@ -112,30 +112,31 @@ export class LoginComponent {
     event.preventDefault();
     this.userDjangoService.login(email, password).subscribe(
       response => {
-
         Swal.fire({
           icon: 'success',
           title: 'Inicio de sesión correcto!',
           text: response.message,
         });
-        
+
+        // Obtener el usuario por email y guardarlo en la sesión
         this.userDjangoService.getUserByEmail(email).subscribe(
           userData => {
-            this.sessionService.setUser(userData);
+            console.log('Usuario obtenido:', userData);
+            this.sessionService.setUser(userData); // Aquí solo se debe guardar el usuario actualmente logueado
             this.router.navigate(['/inicio']);
           },
           error => {
-            console.error('Error:', error);
+            console.error('Error obteniendo usuario:', error);
           }
         );
       },
       error => {
         Swal.fire({
           icon: 'error',
-          title: 'Error de inicio de sesion',
+          title: 'Error de inicio de sesión',
           text: 'Por favor verifica tus credenciales.',
         });
-        console.error('Error:', error);
+        console.error('Error de inicio de sesión:', error);
       }
     );
   }

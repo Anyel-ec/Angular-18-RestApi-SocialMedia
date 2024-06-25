@@ -2,7 +2,7 @@
   <div class="form-container sign-in-container">
     <form (submit)="login($event, email.value, password.value)" #loginForm="ngForm">
       <h1>Iniciar Sesión</h1>
-      <input type="email" #email="ngModel" ngModel name="email" placeholder="Correo Electrónico" required email />
+      <input type="email" #email="ngModel" ngModel name="loginEmail" placeholder="Correo Electrónico" required email />
       <div *ngIf="email.invalid && (email.dirty || email.touched)" class="small-error">
         <small *ngIf="email.errors?.['required']">El correo electrónico es obligatorio.</small>
         <small *ngIf="email.errors?.['email']">Debe ser un formato de correo válido.</small>

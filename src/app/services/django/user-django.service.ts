@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -25,10 +25,11 @@ export class UserDjangoService {
   }
 
   getUserByEmail(email: string): Observable<any> {
-    const url =  `${this.apiUrl}`;
-    const params = { email };  // Definimos el parámetro de consulta 'email'
+    const url = `${this.apiUrl}by_email/`;
+    const params = new HttpParams().set('email', email);
     return this.http.get<any>(url, { params });
   }
+
 
   getUserById(userId: number): Observable<any> {
     const url = `${this.apiUrl}/${userId}`;
