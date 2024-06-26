@@ -10,6 +10,8 @@ import { CommentsComponent } from '../comments/comments.component';
 import { PostDjangoService } from '../../services/django/post-django.service';
 import { UserDjangoService } from '../../services/django/user-django.service';
 import { CategoryService } from '../../services/django/category-django.service';
+import { DomSanitizer } from '@angular/platform-browser';
+
 @Component({
   selector: 'app-card',
   standalone: true,
@@ -25,7 +27,8 @@ export class CardComponent implements OnInit {
 
   constructor(
     private postService: PostDjangoService,
-    private userService: UserDjangoService,
+    private userService: UserDjangoService,    private sanitizer: DomSanitizer, // Inyecta DomSanitizer
+
     private categoryService: CategoryService // Inyecta el servicio de categoría
   ) { }
 
@@ -67,4 +70,10 @@ export class CardComponent implements OnInit {
       }
     );
   }
+
+  getImageUrl(imagePath: string): any {
+    // Construye la URL completa para la imagen usando DomSanitizer
+    return this.sanitizer.bypassSecurityTrustUrl('http://localhost:8000' + imagePath);
+  }
+
 }
