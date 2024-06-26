@@ -1,29 +1,17 @@
-.relative {
-  position: relative;
+.flex {
+  display: flex;
 }
 
-.absolute {
-  position: absolute;
+.justify-center {
+  justify-content: center;
 }
 
-.top-4 {
-  top: 1rem; /* Ajustar según sea necesario */
-}
-
-.right-4 {
-  right: 1rem; /* Ajustar según sea necesario */
-}
-
-.object-cover {
-  object-fit: cover;
-}
-
-.w-full {
-  width: 100%;
+.w-40p {
+  width: 40%;
 }
 
 .max-w-md {
-  max-width: 28rem; /* Ajustar según sea necesario */
+  max-width: 50rem; /* Ajustar según sea necesario */
 }
 
 .rounded-lg {
@@ -36,6 +24,14 @@
 
 .overflow-hidden {
   overflow: hidden;
+}
+
+.mt-5 {
+  margin-top: 1.25rem; /* Ajustar según sea necesario */
+}
+
+.p-4 {
+  padding: 1rem; /* Ajustar según sea necesario */
 }
 
 .p-6 {
@@ -58,10 +54,6 @@
   color: #6b7280; /* Ajustar según sea necesario */
 }
 
-.flex {
-  display: flex;
-}
-
 .items-center {
   align-items: center;
 }
@@ -71,95 +63,33 @@
 }
 
 .gap-4 {
-  gap: 1rem; /* Ajustar según se.relative {
-    position: relative;
-  }
+  gap: 1rem; /* Ajustar según sea necesario */
+}
 
-  .absolute {
-    position: absolute;
-  }
+.mr-2 {
+  margin-right: 0.5rem; /* Ajustar según sea necesario */
+}
 
-  .object-cover {
-    object-fit: cover;
-  }
+.ml-2 {
+  margin-left: 0.5rem; /* Ajustar según sea necesario */
+}
 
-  .w-full {
-    width: 100%;
-  }
+.mb-4 {
+  margin-bottom: 1rem; /* Ajustar según sea necesario */
+}
 
-  .max-w-md {
-    max-width: 28rem; /* Ajustar según sea necesario */
-  }
+.ml-auto {
+  margin-left: auto; /* Alinear a la derecha */
+}
 
-  .rounded-lg {
-    border-radius: 0.5rem; /* Ajustar según sea necesario */
-  }
+.object-cover {
+  object-fit: cover;
+}
 
-  .shadow-md {
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ajustar según sea necesario */
-  }
+.w-full {
+  width: 100%;
+}
 
-  .overflow-hidden {
-    overflow: hidden;
-  }
-
-  .p-6 {
-    padding: 1.5rem; /* Ajustar según sea necesario */
-  }
-
-  .p-4 {
-    padding: 1rem; /* Ajustar según sea necesario */
-  }
-
-  .space-y-4 > :not(:last-child) {
-    margin-bottom: 1rem; /* Ajustar según sea necesario */
-  }
-
-  .text-2xl {
-    font-size: 1.5rem; /* Ajustar según sea necesario */
-  }
-
-  .font-bold {
-    font-weight: bold;
-  }
-
-  .text-muted-foreground {
-    color: #6b7280; /* Ajustar según sea necesario */
-  }
-
-  .flex {
-    display: flex;
-  }
-
-  .items-center {
-    align-items: center;
-  }
-
-  .text-sm {
-    font-size: 0.875rem; /* Ajustar según sea necesario */
-  }
-
-  .gap-4 {
-    gap: 1rem; /* Ajustar según sea necesario */
-  }
-
-  .ml-2 {
-    margin-left: 0.5rem; /* Ajustar según sea necesario */
-  }
-
-  .mr-2 {
-    margin-right: 0.5rem; /* Ajustar según sea necesario */
-  }
-
-  .mb-4 {
-    margin-bottom: 1rem; /* Ajustar según sea necesario */
-  }
-
-  .justify-between {
-    justify-content: space-between;
-  }
-
-  .ml-auto {
-    margin-left: auto; /* Alinear a la derecha */
-  }
-  
+.h-64 {
+  height: 16rem; /* Ajustar según sea necesario */
+}
