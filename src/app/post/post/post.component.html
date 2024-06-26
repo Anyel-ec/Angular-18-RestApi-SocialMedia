@@ -4,7 +4,6 @@
       <h2 class="card-title">Publicar</h2>
       <p class="card-description">Comparte algo nuevo con tu comunidad.</p>
     </div>
-
   </div>
   <div class="card-content">
     <form (ngSubmit)="onSubmit()">
@@ -13,26 +12,20 @@
           <label for="title">Título</label>
           <input id="title" placeholder="Escribe un título" [(ngModel)]="post.title" name="title" class="input"/>
           <label for="category">Categoría</label>
-          <select id="category" name="category" class="input">
-            <option value="technology">Tecnología</option>
-            <option value="science">Ciencia</option>
-            <option value="art">Arte</option>
-            <option value="music">Música</option>
-            <option value="sports">Deportes</option>
+          <select id="category" name="category" [(ngModel)]="post.category_id" class="input">
+            <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
           </select>
         </div>
         <div class="grid gap-2">
           <label for="description">Descripción</label>
-          <textarea id="description" placeholder="Escribe una descripción" [(ngModel)]="post.description" name="description" class="textarea min-h-[100px]"></textarea>
+          <textarea id="description" placeholder="Escribe una descripción" [(ngModel)]="post.content" name="description" class="textarea min-h-[100px]"></textarea>
         </div>
         <div class="grid gap-2">
           <label>Imagen</label>
           <div class="image-container">
             <div *ngIf="!imagePreview" class="flex flex-col items-center justify-center space-y-2 text-center border-2 border-dashed rounded-md border-primary-foreground"
                  (drop)="onDrop($event)" (dragover)="onDragOver($event)" (click)="fileInput.click()">
-              <!--icono i de imagen xfa de fontawensome -->
               <i class="fas fa-image fa-2x text-primary-foreground"></i>
-
               <p class="text-sm text-muted-foreground">Arrastra y suelta tu imagen aquí o haz clic para seleccionar un archivo</p>
               <input type="file" (change)="onFileSelected($event)" hidden #fileInput>
             </div>
@@ -48,10 +41,10 @@
           </div>
         </div>
       </div>
+      <div class="card-footer flex justify-end gap-2">
+        <button type="button" class="button-outline" (click)="onCancel()">Cancelar</button>
+        <button type="submit" class="button">Publicar</button>
+      </div>
     </form>
-  </div>
-  <div class="card-footer flex justify-end gap-2">
-    <button type="button" class="button-outline" (click)="onCancel()">Cancelar</button>
-    <button type="submit" class="button">Publicar</button>
   </div>
 </div>

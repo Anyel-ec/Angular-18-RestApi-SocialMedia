@@ -100,12 +100,6 @@
   text-align: left; /* Alinea el contenido del card a la izquierda */
 }
 
-
-.image-container {
-  max-height: 16rem; /* Altura máxima de la imagen */
-  overflow: hidden; /* Oculta cualquier parte de la imagen que exceda el contenedor */
-}
-
 .object-cover {
   object-fit: cover; /* Ajusta la imagen para que cubra el contenedor */
 }
@@ -113,3 +107,40 @@
 .card {
   margin-bottom: 20px; /* Espacio entre las tarjetas */
 }
+
+.image-container {
+  position: relative;
+  max-height: 16rem; /* Altura máxima de la imagen */
+  overflow: hidden; /* Oculta cualquier parte de la imagen que exceda el contenedor */
+}
+
+.expanded-image {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.9); /* Fondo oscuro semi-transparente */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Asegura que la imagen ampliada esté sobre otros elementos */
+}
+
+.expanded-image img {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain; /* Ajusta la imagen manteniendo la relación de aspecto */
+}
+
+.close-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  color: white;
+}
+
+.card {
+  margin-bottom: 20px; /* Espacio entre las tarjetas */
+}
+

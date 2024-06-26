@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
@@ -12,8 +12,16 @@ export class PostDjangoService {
   constructor(private http: HttpClient) {}
 
   // Método para crear una nueva publicación
-  createPost(postData: any): Observable<any> {
-    return this.http.post<any>(this.baseUrl, postData);
+  createPost(formData: FormData): Observable<any> {
+    const headers = new HttpHeaders();
+    headers.append('Content-Type', 'multipart/form-data');
+
+    return this.http.post<any>(this.baseUrl, formData, { headers: headers }).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('Error al crear la publicación', error);
+        return throwError(error);
+      })
+    );
   }
 
   // Método para obtener todas las publicaciones

@@ -31,9 +31,22 @@
             </div>
             <!-- Contenedor para la imagen con estilos específicos -->
             <div class="image-container">
-              <img [src]="post.image ? getImageUrl(post.image) : 'https://via.placeholder.com/150'"
-                   alt="Blog post cover image"
-                   class="object-cover w-full h-full" />
+              <!-- Imagen con clic para ampliar -->
+              <div *ngIf="!isImageExpanded">
+                <img [src]="post.image ? getImageUrl(post.image) : 'https://via.placeholder.com/150'"
+                     alt="Blog post cover image"
+                     class="object-cover w-full h-full"
+                     (click)="expandImage(post.image)" />
+              </div>
+              <!-- Imagen ampliada -->
+              <div *ngIf="isImageExpanded" class="expanded-image">
+                <img [src]="post.image ? getImageUrl(post.image) : 'https://via.placeholder.com/150'"
+                     alt="Blog post cover image"
+                     class="object-cover w-full h-full" />
+                <button mat-icon-button class="close-button" (click)="closeImage()">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
             </div>
           </div>
           <mat-card-content class="p-6 space-y-4">

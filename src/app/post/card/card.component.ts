@@ -35,7 +35,15 @@ export class CardComponent implements OnInit {
   ngOnInit(): void {
     this.loadPosts();
   }
+  isImageExpanded = false;
 
+  expandImage(imageUrl: string) {
+    this.isImageExpanded = true;
+  }
+
+  closeImage() {
+    this.isImageExpanded = false;
+  }
   toggleComments() {
     this.showComments = !this.showComments;
   }
