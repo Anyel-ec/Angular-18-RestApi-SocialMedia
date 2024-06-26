@@ -32,7 +32,7 @@ export class UserDjangoService {
 
 
   getUserById(userId: number): Observable<any> {
-    const url = `${this.apiUrl}/${userId}`;
+    const url = `${this.apiUrl}${userId}`;
     return this.http.get<any>(url);
   }
 
