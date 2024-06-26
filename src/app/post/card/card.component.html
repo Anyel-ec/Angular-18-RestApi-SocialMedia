@@ -1,5 +1,5 @@
 <div class="flex justify-center">
-  <mat-card class="w-40p max-w-md rounded-lg shadow-md overflow-hidden mt-5 card">
+  <mat-card class="w-40p max-w-md rounded-lg shadow-md overflow-hidden mt-5 card justify-center">
     <div class="relative p-4">
       <div class="flex justify-between items-center mb-4">
         <div class="flex items-center text-sm text-muted-foreground">
@@ -8,6 +8,9 @@
           <span class="ml-2 text-muted-foreground">June 25, 2024</span>
         </div>
         <div class="flex items-center gap-2 ml-auto">
+          <button mat-icon-button (click)="toggleComments()">
+            <mat-icon>comment</mat-icon>
+          </button>
           <button mat-icon-button [matMenuTriggerFor]="menu">
             <mat-icon>more_vert</mat-icon>
           </button>
@@ -34,9 +37,12 @@
         <button mat-icon-button>
           <mat-icon>favorite_border</mat-icon>
         </button>
-        <button mat-icon-button>
+        <button mat-icon-button (click)="toggleComments()">
           <mat-icon>comment</mat-icon>
         </button>
+      </div>
+      <div *ngIf="showComments">
+        <app-comments></app-comments>
       </div>
     </mat-card-content>
   </mat-card>

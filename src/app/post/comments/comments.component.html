@@ -1,0 +1,69 @@
+<div class="w-full max-w-2xl mx-auto space-y-6">
+  <h2 class="text-2xl font-bold">Comments</h2>
+  <div class="space-y-4">
+    <div *ngFor="let comment of comments" class="bg-card p-4 rounded-lg shadow-sm">
+      <div class="flex items-start justify-between">
+        <div class="flex items-center gap-2">
+          <div class="avatar w-8 h-8 border flex items-center justify-center">
+            <i class="fas fa-user"></i>
+          </div>
+          <div class="space-y-1">
+            <div class="font-medium">{{ comment.user }}</div>
+            <div class="text-sm text-muted-foreground">{{ comment.date }}</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button (click)="handleReply(comment.id)" class="btn-icon">
+            <i class="fas fa-reply"></i>
+            <span class="sr-only">Reply</span>
+          </button>
+          <button (click)="handleEdit(comment.id)" class="btn-icon">
+            <i class="fas fa-edit"></i>
+            <span class="sr-only">Edit</span>
+          </button>
+          <button (click)="handleDelete(comment.id)" class="btn-icon">
+            <i class="fas fa-trash-alt"></i>
+            <span class="sr-only">Delete</span>
+          </button>
+          <button (click)="handleExpand(comment.id)" class="btn-icon">
+            <i class="fas fa-chevron-down"></i>
+            <span class="sr-only">Expand</span>
+          </button>
+        </div>
+      </div>
+      <div class="mt-4 text-muted-foreground">{{ comment.content }}</div>
+      <div *ngIf="expandedCommentId === comment.id" class="mt-4 space-y-4">
+        <div *ngFor="let reply of comment.replies" class="bg-reply p-4 rounded-lg shadow-sm">
+          <div class="flex items-center gap-2">
+            <div class="avatar w-8 h-8 border flex items-center justify-center">
+              <i class="fas fa-user"></i>
+            </div>
+            <div class="space-y-1">
+              <div class="font-medium">{{ reply.user }}</div>
+              <div class="text-sm text-muted-foreground">{{ reply.date }}</div>
+            </div>
+          </div>
+          <div class="mt-2 text-muted-foreground">{{ reply.content }}</div>
+        </div>
+        <div class="flex items-center gap-2">
+          <input
+            type="text"
+            placeholder="Write a reply..."
+            [(ngModel)]="newReply"
+            class="input"
+          />
+          <button (click)="handleAddReply(comment.id)" class="btn">Reply</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="flex items-center gap-2">
+    <input
+      type="text"
+      placeholder="Write a new comment..."
+      [(ngModel)]="newComment"
+      class="input"
+    />
+    <button (click)="handleAddComment()" class="btn">Add Comment</button>
+  </div>
+</div>
