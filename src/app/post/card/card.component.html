@@ -32,18 +32,18 @@
             <!-- Contenedor para la imagen con estilos específicos -->
             <div class="image-container">
               <!-- Imagen con clic para ampliar -->
-              <div *ngIf="!isImageExpanded">
+              <div *ngIf="!post.isImageExpanded">
                 <img [src]="post.image ? getImageUrl(post.image) : 'https://via.placeholder.com/150'"
                      alt="Blog post cover image"
                      class="object-cover w-full h-full"
-                     (click)="expandImage(post.image)" />
+                     (click)="expandImage(post)" />
               </div>
               <!-- Imagen ampliada -->
-              <div *ngIf="isImageExpanded" class="expanded-image">
+              <div *ngIf="post.isImageExpanded" class="expanded-image">
                 <img [src]="post.image ? getImageUrl(post.image) : 'https://via.placeholder.com/150'"
                      alt="Blog post cover image"
                      class="object-cover w-full h-full" />
-                <button mat-icon-button class="close-button" (click)="closeImage()">
+                <button mat-icon-button class="close-button" (click)="closeImage(post)">
                   <mat-icon>close</mat-icon>
                 </button>
               </div>

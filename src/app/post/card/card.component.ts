@@ -9,14 +9,15 @@ import { CommonModule, NgComponentOutlet } from '@angular/common';
 import { CommentsComponent } from '../comments/comments.component';
 import { PostDjangoService } from '../../services/django/post-django.service';
 import { UserDjangoService } from '../../services/django/user-django.service';
-import { CategoryService } from '../../services/django/category-django.service';
 import { DomSanitizer } from '@angular/platform-browser';
+import { CategoryDjangoService } from '../../services/django/category-django.service';
+import { NewPostService } from '../../services/django/new-post.service';
 
 @Component({
   selector: 'app-card',
   standalone: true,
   imports: [MatCardModule,MatIconModule, MatMenuModule, MatButtonModule, CommonModule, CardComponent, CommentsComponent],
-  providers: [PostDjangoService, UserDjangoService, CategoryService],
+  providers: [PostDjangoService, UserDjangoService, CategoryDjangoService],
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss'
 })
@@ -27,23 +28,30 @@ export class CardComponent implements OnInit {
 
   constructor(
     private postService: PostDjangoService,
-    private userService: UserDjangoService,    private sanitizer: DomSanitizer, // Inyecta DomSanitizer
+    private userService: UserDjangoService,
+    private sanitizer: DomSanitizer, // Inyecta DomSanitizer
+    private categoryDjangoService: CategoryDjangoService, // Inyecta el servicio de categoría
+    private newPostService: NewPostService // Inyectar el nuevo servicio
 
-    private categoryService: CategoryService // Inyecta el servicio de categoría
   ) { }
 
   ngOnInit(): void {
     this.loadPosts();
+    this.newPostService.postCreated$.subscribe(() => {
+      this.loadPosts(); // Cargar publicaciones cuando se notifique un nuevo post
+    });
   }
   isImageExpanded = false;
+  expandedImageIndex: number | null = null; // Variable para controlar la imagen expandida
 
-  expandImage(imageUrl: string) {
-    this.isImageExpanded = true;
+  expandImage(post: any) {
+    post.isImageExpanded = true;
   }
 
-  closeImage() {
-    this.isImageExpanded = false;
+  closeImage(post: any) {
+    post.isImageExpanded = false;
   }
+
   toggleComments() {
     this.showComments = !this.showComments;
   }
@@ -51,21 +59,24 @@ export class CardComponent implements OnInit {
   loadPosts() {
     this.postService.getAllPosts().subscribe(
       (data: any[]) => {
-        this.posts = data;
+        this.posts = data.map(post => ({
+          ...post,
+          isImageExpanded: false // Agregar propiedad para controlar la expansión de la imagen
+        })).reverse();
+
         this.posts.forEach(post => {
           this.userService.getUserById(post.user_id).subscribe(
             (userData: any) => {
-              post.username = userData.name; // Asigna el nombre del usuario al post
+              post.username = userData.name;
             },
             (error: any) => {
               console.error(`Error fetching user for post ${post.id}:`, error);
             }
           );
 
-          // Obtén la categoría por su ID y asigna el nombre de la categoría al post
-          this.categoryService.getCategoryById(post.category_id).subscribe(
+          this.categoryDjangoService.getCategoryById(post.category_id).subscribe(
             (categoryData: any) => {
-              post.category = categoryData.name; // Suponiendo que el servicio devuelve un objeto con el nombre de la categoría
+              post.category = categoryData.name;
             },
             (error: any) => {
               console.error(`Error fetching category for post ${post.id}:`, error);
@@ -80,7 +91,6 @@ export class CardComponent implements OnInit {
   }
 
   getImageUrl(imagePath: string): any {
-    // Construye la URL completa para la imagen usando DomSanitizer
     return this.sanitizer.bypassSecurityTrustUrl('http://localhost:8000' + imagePath);
   }
 

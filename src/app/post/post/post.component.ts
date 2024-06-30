@@ -4,8 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { PostDjangoService } from '../../services/django/post-django.service';
 import Swal from 'sweetalert2';
 import { SessionService } from '../../services/shared/session.service';
-import { CategoryService } from '../../services/django/category-django.service';
 import { HttpClientModule } from '@angular/common/http';
+import { CategoryDjangoService } from '../../services/django/category-django.service';
+import { NewPostService } from '../../services/django/new-post.service';
 
 @Component({
   selector: 'app-post',
@@ -13,7 +14,7 @@ import { HttpClientModule } from '@angular/common/http';
   imports: [CommonModule, FormsModule, HttpClientModule],
   templateUrl: './post.component.html',
   styleUrls: ['./post.component.scss'],
-  providers: [PostDjangoService, SessionService, CategoryService] // Provee el servicio de publicaciones
+  providers: [PostDjangoService, SessionService, CategoryDjangoService] // Provee el servicio de publicaciones
 })
 
 export class PostComponent implements OnInit {
@@ -30,8 +31,10 @@ export class PostComponent implements OnInit {
 
   constructor(
     private sessionService: SessionService,
-    private categoryService: CategoryService,
-    private postService: PostDjangoService
+    private categoryDjangoService: CategoryDjangoService,
+    private postService: PostDjangoService,
+    private newPostService: NewPostService // Inyectar el nuevo servicio
+
   ) {}
 
   ngOnInit(): void {
@@ -44,7 +47,7 @@ export class PostComponent implements OnInit {
   }
 
   loadCategories(): void {
-    this.categoryService.getAllCategories().subscribe(
+    this.categoryDjangoService.getAllCategories().subscribe(
       categories => {
         this.categories = categories;
         // Establecer una categoría por defecto si es necesario
@@ -89,6 +92,7 @@ export class PostComponent implements OnInit {
         Swal.fire('¡Éxito!', 'La publicación se creó correctamente', 'success');
         // Limpiar formulario después de éxito
         this.resetForm();
+        this.newPostService.notifyPostCreated(); // Notificar que se ha creado una nueva publicación
       },
       error => {
         console.error('Error al crear la publicación', error);

@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class CategoryService {
+export class CategoryDjangoService {
   private apiUrl = 'http://localhost:8000/api/v2/categories/';
 
   constructor(private http: HttpClient) { }
