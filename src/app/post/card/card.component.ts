@@ -12,6 +12,7 @@ import { UserDjangoService } from '../../services/django/user-django.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CategoryDjangoService } from '../../services/django/category-django.service';
 import { NewPostService } from '../../services/django/new-post.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-card',
@@ -55,6 +56,52 @@ export class CardComponent implements OnInit {
   toggleComments() {
     this.showComments = !this.showComments;
   }
+
+  confirmDelete(postId: number) {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Esta acción no se puede revertir. ¿Quieres eliminar esta publicación?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.deletePost(postId);
+      }
+    });
+  }
+
+  deletePost(postId: number) {
+    // Mostrar la alerta de confirmación de eliminación como un toast
+    Swal.fire({
+      icon: 'success',
+      title: 'La publicación ha sido eliminada.',
+      position: 'top-end', // Posición en la esquina superior derecha
+      toast: true,
+      timer: 1500, // Duración del toast en milisegundos
+      showConfirmButton: false // No mostrar botón de confirmación
+    });
+
+    // Eliminar el post y luego cargar las publicaciones
+    this.postService.deletePost(postId).subscribe(
+      () => {
+        // Volver a cargar las publicaciones después de eliminar
+        this.loadPosts();
+      },
+      (error: any) => {
+        console.error(`Error deleting post ${postId}:`, error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Hubo un problema al eliminar la publicación.',
+        });
+      }
+    );
+  }
+
 
   loadPosts() {
     this.postService.getAllPosts().subscribe(

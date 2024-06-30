@@ -126,12 +126,8 @@ export class PostComponent implements OnInit {
     event.preventDefault();
   }
 
-
-
-
-
   private resetForm(): void {
-    this.post = { title: '', content: '', user_id: 0, category_id: 0, image: undefined };
+    this.post = { title: '', content: '', user_id: this.currentUser.id, category_id: 0, image: undefined };
     this.imagePreview = null;
   }
 

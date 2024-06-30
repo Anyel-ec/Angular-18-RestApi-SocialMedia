@@ -17,8 +17,9 @@
                 <button mat-icon-button [matMenuTriggerFor]="menu">
                   <mat-icon>more_vert</mat-icon>
                 </button>
+                <!-- card.component.html -->
                 <mat-menu #menu="matMenu">
-                  <button mat-menu-item>
+                  <button mat-menu-item (click)="confirmDelete(post.id)">
                     <mat-icon>delete</mat-icon>
                     <span>Delete</span>
                   </button>
@@ -27,6 +28,7 @@
                     <span>Edit</span>
                   </button>
                 </mat-menu>
+
               </div>
             </div>
             <!-- Contenedor para la imagen con estilos específicos -->
@@ -34,15 +36,12 @@
               <!-- Imagen con clic para ampliar -->
               <div *ngIf="!post.isImageExpanded">
                 <img [src]="post.image ? getImageUrl(post.image) : 'https://via.placeholder.com/150'"
-                     alt="Blog post cover image"
-                     class="object-cover w-full h-full"
-                     (click)="expandImage(post)" />
+                  alt="Blog post cover image" class="object-cover w-full h-full" (click)="expandImage(post)" />
               </div>
               <!-- Imagen ampliada -->
               <div *ngIf="post.isImageExpanded" class="expanded-image">
                 <img [src]="post.image ? getImageUrl(post.image) : 'https://via.placeholder.com/150'"
-                     alt="Blog post cover image"
-                     class="object-cover w-full h-full" />
+                  alt="Blog post cover image" class="object-cover w-full h-full" />
                 <button mat-icon-button class="close-button" (click)="closeImage(post)">
                   <mat-icon>close</mat-icon>
                 </button>
@@ -54,7 +53,8 @@
               <mat-icon class="text-muted-foreground"></mat-icon>
             </div>
             <mat-card-title class="text-2xl font-bold">{{ post.title }}</mat-card-title>
-            <p class="text-muted-foreground">{{ post.content }} <span class="text-primary">#{{ post.category }}</span></p>
+            <p class="text-muted-foreground">{{ post.content }} <span class="text-primary">#{{ post.category }}</span>
+            </p>
             <div class="flex items-center gap-4">
               <button mat-icon-button>
                 <mat-icon>favorite_border</mat-icon>
