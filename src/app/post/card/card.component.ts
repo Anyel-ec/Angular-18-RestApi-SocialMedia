@@ -181,9 +181,15 @@ export class CardComponent implements OnInit {
     formData.append('title', this.editingPost.title);
     formData.append('content', this.editingPost.content);
     formData.append('category_id', this.editingPost.category_id.toString());
-    if (this.editingPost.image) {
+
+    // Solo agregar la imagen si se ha seleccionado una nueva
+    if (this.editingPost.image && this.editingPost.image instanceof File) {
       formData.append('image', this.editingPost.image);
+    } else {
+      // Si no se selecciona una nueva imagen, mantener la anterior
+      formData.append('existing_image', this.editingPost.image);
     }
+
     formData.append('user_id', this.currentUser.id);
 
     this.postService.updatePost(this.editingPost.id, formData).subscribe(
@@ -199,5 +205,6 @@ export class CardComponent implements OnInit {
       }
     );
   }
+
 }
 
