@@ -22,8 +22,6 @@ export const routes: Routes = [
     path: 'prueba',
     component: CardComponent
   }
-
-
 ];
 
 @NgModule({

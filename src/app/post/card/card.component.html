@@ -11,34 +11,26 @@
                 <span class="ml-2 text-muted-foreground">{{ post.time_created | date }}</span>
               </div>
               <div class="flex items-center gap-2 ml-auto">
-                <button mat-icon-button (click)="toggleComments()">
-                  <mat-icon>comment</mat-icon>
-                </button>
                 <button mat-icon-button [matMenuTriggerFor]="menu">
                   <mat-icon>more_vert</mat-icon>
                 </button>
-                <!-- card.component.html -->
                 <mat-menu #menu="matMenu">
                   <button mat-menu-item (click)="confirmDelete(post.id)">
                     <mat-icon>delete</mat-icon>
                     <span>Delete</span>
                   </button>
-                  <button mat-menu-item>
+                  <button mat-menu-item (click)="startEdit(post)">
                     <mat-icon>edit</mat-icon>
                     <span>Edit</span>
                   </button>
                 </mat-menu>
-
               </div>
             </div>
-            <!-- Contenedor para la imagen con estilos específicos -->
-            <div class="image-container">
-              <!-- Imagen con clic para ampliar -->
+            <div class="image-container" *ngIf="!editingPost || editingPost.id !== post.id">
               <div *ngIf="!post.isImageExpanded">
                 <img [src]="post.image ? getImageUrl(post.image) : 'https://via.placeholder.com/150'"
                   alt="Blog post cover image" class="object-cover w-full h-full" (click)="expandImage(post)" />
               </div>
-              <!-- Imagen ampliada -->
               <div *ngIf="post.isImageExpanded" class="expanded-image">
                 <img [src]="post.image ? getImageUrl(post.image) : 'https://via.placeholder.com/150'"
                   alt="Blog post cover image" class="object-cover w-full h-full" />
@@ -48,13 +40,9 @@
               </div>
             </div>
           </div>
-          <mat-card-content class="p-6 space-y-4">
-            <div class="flex items-center gap-2">
-              <mat-icon class="text-muted-foreground"></mat-icon>
-            </div>
+          <mat-card-content class="p-6 space-y-4" *ngIf="!editingPost || editingPost.id !== post.id">
             <mat-card-title class="text-2xl font-bold">{{ post.title }}</mat-card-title>
-            <p class="text-muted-foreground">{{ post.content }} <span class="text-primary">#{{ post.category }}</span>
-            </p>
+            <p class="text-muted-foreground">{{ post.content }} <span class="text-primary">#{{ post.category }}</span></p>
             <div class="flex items-center gap-4">
               <button mat-icon-button>
                 <mat-icon>favorite_border</mat-icon>
@@ -66,6 +54,33 @@
             <div *ngIf="showComments">
               <app-comments></app-comments>
             </div>
+          </mat-card-content>
+          <mat-card-content class="p-6 space-y-4" *ngIf="editingPost && editingPost.id === post.id">
+            <form (ngSubmit)="savePost()">
+              <div class="grid gap-4">
+                <div class="grid gap-2">
+                  <label for="title">Título</label>
+                  <input id="title" [(ngModel)]="editingPost.title" name="title" class="input"/>
+                  <label for="category">Categoría</label>
+                  <select id="category" [(ngModel)]="editingPost.category_id" name="category" class="input">
+                    <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+                  </select>
+                </div>
+                <div class="grid gap-2">
+                  <label for="description">Descripción</label>
+                  <textarea id="description" [(ngModel)]="editingPost.content" name="description" class="input"></textarea>
+                </div>
+                <div class="grid gap-2">
+                  <label for="image">Imagen</label>
+                  <input type="file" id="image" (change)="onFileSelected($event)" class="input"/>
+                  <img *ngIf="imagePreview" [src]="imagePreview" alt="Vista previa de la imagen" class="object-cover w-full h-full mt-2"/>
+                </div>
+                <div class="flex justify-end gap-4">
+                  <button type="button" (click)="cancelEdit()" class="btn">Cancelar</button>
+                  <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+              </div>
+            </form>
           </mat-card-content>
         </mat-card>
       </div>

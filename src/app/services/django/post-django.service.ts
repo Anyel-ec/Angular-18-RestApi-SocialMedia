@@ -35,7 +35,7 @@ export class PostDjangoService {
   }
 
   // Método para actualizar una publicación por su ID
-  updatePost(postId: number, postData: any): Observable<any> {
+  updatePost(postId: number, postData: FormData): Observable<any> {
     return this.http.put<any>(`${this.baseUrl}${postId}/`, postData);
   }
 
