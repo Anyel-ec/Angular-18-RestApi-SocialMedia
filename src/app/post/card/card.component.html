@@ -4,7 +4,7 @@
       <div *ngFor="let post of posts" class="d-flex justify-content-center">
         <mat-card class="max-w-md rounded-lg shadow-md overflow-hidden mt-5 card justify-center">
           <div class="relative p-4">
-            <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex justify-content-between align-items-center">
               <div class="flex items-center text-sm text-muted-foreground">
                 <mat-icon class="mr-2">person</mat-icon>
                 <span>{{ post.username }}</span>
@@ -26,6 +26,10 @@
                 </mat-menu>
               </div>
             </div>
+          </div>
+          <mat-card-content class="p-6 space-y-4" *ngIf="!editingPost || editingPost.id !== post.id">
+            <mat-card-title class="text-2xl font-bold">{{ post.title }}</mat-card-title>
+            <p class="text-muted-foreground">{{ post.content }} <span class="text-primary">#{{ post.category }}</span></p>
             <div class="image-container" *ngIf="!editingPost || editingPost.id !== post.id">
               <div *ngIf="!post.isImageExpanded">
                 <img [src]="post.image ? getImageUrl(post.image) : 'https://via.placeholder.com/150'"
@@ -39,10 +43,6 @@
                 </button>
               </div>
             </div>
-          </div>
-          <mat-card-content class="p-6 space-y-4" *ngIf="!editingPost || editingPost.id !== post.id">
-            <mat-card-title class="text-2xl font-bold">{{ post.title }}</mat-card-title>
-            <p class="text-muted-foreground">{{ post.content }} <span class="text-primary">#{{ post.category }}</span></p>
             <div class="flex items-center gap-4">
               <button mat-icon-button>
                 <mat-icon>favorite_border</mat-icon>
@@ -55,23 +55,24 @@
               <app-comments></app-comments>
             </div>
           </mat-card-content>
+
           <mat-card-content class="p-6 space-y-4" *ngIf="editingPost && editingPost.id === post.id">
             <form (ngSubmit)="savePost()">
               <div class="grid gap-4">
                 <div class="grid gap-2">
-                  <label for="title">Título</label>
+                  <label for="title" class="label">Título</label>
                   <input id="title" [(ngModel)]="editingPost.title" name="title" class="input"/>
-                  <label for="category">Categoría</label>
+                  <label for="category" class="label">Categoría</label>
                   <select id="category" [(ngModel)]="editingPost.category_id" name="category" class="input">
                     <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
                   </select>
                 </div>
                 <div class="grid gap-2">
-                  <label for="description">Descripción</label>
+                  <label for="description" class="label">Descripción</label>
                   <textarea id="description" [(ngModel)]="editingPost.content" name="description" class="input"></textarea>
                 </div>
                 <div class="grid gap-2">
-                  <label for="image">Imagen</label>
+                  <label for="image" class="label">Imagen</label>
                   <input type="file" id="image" (change)="onFileSelected($event)" class="input"/>
                   <img *ngIf="imagePreview" [src]="imagePreview" alt="Vista previa de la imagen" class="object-cover w-full h-full mt-2"/>
                 </div>
