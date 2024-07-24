@@ -8,8 +8,8 @@
             <i class="fas fa-user"></i>
           </div>
           <div class="space-y-1">
-            <div class="font-medium">{{ comment.user }}</div>
-            <div class="text-sm text-muted-foreground">{{ comment.date }}</div>
+            <div class="font-medium">{{ comment.userId }}</div>
+            <div class="text-sm text-muted-foreground">{{ comment.timeCreated | date:'short' }}</div>
           </div>
         </div>
         <div class="flex items-center gap-2">
@@ -33,14 +33,14 @@
       </div>
       <div class="mt-4 text-muted-foreground">{{ comment.content }}</div>
       <div *ngIf="expandedCommentId === comment.id" class="mt-4 space-y-4">
-        <div *ngFor="let reply of comment.replies" class="bg-reply p-4 rounded-lg shadow-sm">
+        <div *ngFor="let reply of comment.responses" class="bg-reply p-4 rounded-lg shadow-sm">
           <div class="flex items-center gap-2">
             <div class="avatar w-8 h-8 border flex items-center justify-center">
               <i class="fas fa-user"></i>
             </div>
             <div class="space-y-1">
-              <div class="font-medium">{{ reply.user }}</div>
-              <div class="text-sm text-muted-foreground">{{ reply.date }}</div>
+              <div class="font-medium">{{ reply.userId }}</div>
+              <div class="text-sm text-muted-foreground">{{ reply.timeCreated | date:'short' }}</div>
             </div>
           </div>
           <div class="mt-2 text-muted-foreground">{{ reply.content }}</div>

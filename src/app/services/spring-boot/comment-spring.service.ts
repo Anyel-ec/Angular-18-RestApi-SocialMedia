@@ -2,6 +2,22 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
+export interface CommentResponse {
+  id: string;
+  userId: number;
+  content: string;
+  timeCreated: string;
+}
+
+export interface Comment {
+  id: string;
+  postId: number;
+  userId: number;
+  content: string;
+  timeCreated: string;
+  responses: CommentResponse[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -10,34 +26,31 @@ export class CommentSpringService {
 
   constructor(private http: HttpClient) {}
 
+  getComments(): Observable<Comment[]> {
+    return this.http.get<Comment[]>(`${this.apiUrl}/`);
+  }
 
-  // Método para agregar una respuesta a un comentario existente
-  addResponse(commentId: number, response: Comment): Observable<Comment> {
+  addResponse(commentId: string, response: CommentResponse): Observable<Comment> {
     return this.http.put<Comment>(`${this.apiUrl}/${commentId}/response`, response);
   }
 
-  getCommentsByPostId(postId: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/post/${postId}`);
+  getCommentsByPostId(postId: number): Observable<Comment[]> {
+    return this.http.get<Comment[]>(`${this.apiUrl}/post/${postId}`);
   }
 
-  addComment(comment: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/save`, comment);
+  addComment(comment: Comment): Observable<Comment> {
+    return this.http.post<Comment>(`${this.apiUrl}/save`, comment);
   }
 
-  addReplyToComment(id: number, reply: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/${id}/reply`, reply);
+  addReplyToComment(id: string, reply: CommentResponse): Observable<Comment> {
+    return this.http.post<Comment>(`${this.apiUrl}/${id}/reply`, reply);
   }
 
-
-  updateComment(id: number, comment: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${id}/update`, comment);
+  updateComment(id: string, comment: Comment): Observable<Comment> {
+    return this.http.put<Comment>(`${this.apiUrl}/${id}/update`, comment);
   }
 
-  deleteComment(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}/delete`);
+  deleteComment(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}/delete`);
   }
-
-
-
-
 }
