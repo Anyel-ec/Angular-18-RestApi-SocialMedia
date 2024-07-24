@@ -8,7 +8,7 @@
             <i class="fas fa-user"></i>
           </div>
           <div class="space-y-1">
-            <div class="font-medium">{{ comment.userId }}</div>
+            <div class="font-medium">{{ getUserName(comment.userId) }}</div>
             <div class="text-sm text-muted-foreground">{{ comment.timeCreated | date:'short' }}</div>
           </div>
         </div>
@@ -39,7 +39,7 @@
               <i class="fas fa-user"></i>
             </div>
             <div class="space-y-1">
-              <div class="font-medium">{{ reply.userId }}</div>
+              <div class="font-medium">{{ getUserName(reply.userId) }}</div>
               <div class="text-sm text-muted-foreground">{{ reply.timeCreated | date:'short' }}</div>
             </div>
           </div>

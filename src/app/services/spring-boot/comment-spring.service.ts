@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 
 export interface CommentResponse {
   id: string;
+  commentId: string;
   userId: number;
   content: string;
   timeCreated: string;

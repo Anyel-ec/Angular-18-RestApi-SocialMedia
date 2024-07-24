@@ -1,11 +1,11 @@
 export class CommentResponse {
-  id: number;
-  commentId: number;
+  id: String;
+  commentId: String;
   userId: number;
   content: string;
-  timeCreated: string; // Ajusta el tipo según cómo manejes las fechas en Angular
+  timeCreated: string;
 
-  constructor(id: number, commentId: number, userId: number, content: string, timeCreated: string) {
+  constructor(id: String, commentId: String, userId: number, content: string, timeCreated: string) {
     this.id = id;
     this.commentId = commentId;
     this.userId = userId;
