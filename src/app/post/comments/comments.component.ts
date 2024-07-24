@@ -51,6 +51,21 @@ export class CommentsComponent implements OnInit {
             users.forEach(user => (this.userMap[user.id] = user.name));
           });
         }
+
+        // Obtener y mostrar el número de comentarios por cada postId encontrado en los comentarios
+        const postIds = [...new Set(data.map(comment => comment.postId))];
+        postIds.forEach(postId => {
+          this.commentService.countCommentsByPostId(postId).subscribe(
+            count => {
+              console.log(`Número de comentarios para el post ${postId}:`, count);
+            },
+            error => {
+              console.error(`Error fetching comment count for post ${postId}:`, error);
+            }
+          );
+        });
+
+        
       },
       error => {
         console.error('Error fetching comments:', error);

@@ -47,9 +47,12 @@
               <button mat-icon-button>
                 <mat-icon>favorite_border</mat-icon>
               </button>
-              <button mat-icon-button (click)="toggleComments()">
-                <mat-icon>comment</mat-icon>
-              </button>
+              <div class="flex items-center">
+                <button mat-icon-button (click)="toggleComments()">
+                  <mat-icon>comment</mat-icon>
+                </button>
+                <span>{{ post.commentCount || 0 }}</span>
+              </div>
             </div>
             <div *ngIf="showComments">
               <app-comments></app-comments>

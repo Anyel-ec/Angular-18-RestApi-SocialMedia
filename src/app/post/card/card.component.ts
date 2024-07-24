@@ -13,12 +13,13 @@ import { CategoryDjangoService } from '../../services/django/category-django.ser
 import { NewPostService } from '../../services/django/new-post.service';
 import Swal from 'sweetalert2';
 import { SessionService } from '../../services/shared/session.service';
+import { CommentSpringService } from '../../services/spring-boot/comment-spring.service';
 
 @Component({
   selector: 'app-card',
   standalone: true,
   imports: [MatCardModule, MatIconModule, MatMenuModule, MatButtonModule, CommonModule, CommentsComponent, FormsModule],
-  providers: [PostDjangoService, UserDjangoService,SessionService, CategoryDjangoService],
+  providers: [CommentSpringService, PostDjangoService, UserDjangoService,SessionService, CategoryDjangoService],
   templateUrl: './card.component.html',
   styleUrls: ['./card.component.scss']
 })
@@ -37,6 +38,7 @@ export class CardComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private categoryDjangoService: CategoryDjangoService,
     private newPostService: NewPostService,
+    private commentService: CommentSpringService,
     private sessionService: SessionService // Inyectar el servicio de sesión
   ) {}
 
@@ -150,6 +152,16 @@ export class CardComponent implements OnInit {
             },
             (error: any) => {
               console.error(`Error fetching category for post ${post.id}:`, error);
+            }
+          );
+
+          this.commentService.countCommentsByPostId(post.id).subscribe(
+            (count: number) => {
+              post.commentCount = count;
+              console.log(`Número de comentarios para el post ${post.id}:`, count);
+            },
+            (error: any) => {
+              console.error(`Error fetching comment count for post ${post.id}:`, error);
             }
           );
         });

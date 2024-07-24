@@ -54,4 +54,12 @@ export class CommentSpringService {
   deleteComment(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}/delete`);
   }
+
+  countCommentsByPostId(postId: number): Observable<number> {
+    const url = `${this.apiUrl}/count/${postId}`;
+    console.log(`Fetching comment count from URL: ${url}`);
+    return this.http.get<number>(url);
+  }
+
+
 }
