@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 export interface CommentResponse {
-  id: string;
+  id?: string;  // Cambiar a opcional
   commentId: string;
   userId: number;
   content: string;
@@ -11,7 +11,7 @@ export interface CommentResponse {
 }
 
 export interface Comment {
-  id: string;
+  id?: string;  // Cambiar a opcional
   postId: number;
   userId: number;
   content: string;
@@ -25,14 +25,14 @@ export interface Comment {
 export class CommentSpringService {
   private apiUrl = 'http://localhost:8080/comment'; // URL del backend
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getComments(): Observable<Comment[]> {
     return this.http.get<Comment[]>(`${this.apiUrl}/`);
   }
 
   addResponse(commentId: string, response: CommentResponse): Observable<Comment> {
-    return this.http.put<Comment>(`${this.apiUrl}/${commentId}/response`, response);
+    return this.http.post<Comment>(`${this.apiUrl}/${commentId}/response`, response);
   }
 
   getCommentsByPostId(postId: number): Observable<Comment[]> {
@@ -43,10 +43,6 @@ export class CommentSpringService {
     return this.http.post<Comment>(`${this.apiUrl}/save`, comment);
   }
 
-  addReplyToComment(id: string, reply: CommentResponse): Observable<Comment> {
-    return this.http.post<Comment>(`${this.apiUrl}/${id}/reply`, reply);
-  }
-
   updateComment(id: string, comment: Comment): Observable<Comment> {
     return this.http.put<Comment>(`${this.apiUrl}/${id}/update`, comment);
   }
@@ -55,11 +51,12 @@ export class CommentSpringService {
     return this.http.delete<void>(`${this.apiUrl}/${id}/delete`);
   }
 
-  countCommentsByPostId(postId: number): Observable<number> {
-    const url = `${this.apiUrl}/count/${postId}`;
-    console.log(`Fetching comment count from URL: ${url}`);
-    return this.http.get<number>(url);
+
+  deleteCommentsByPostId(postId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/post/${postId}/delete`);
   }
 
-
+  countCommentsByPostId(postId: number): Observable<number> {
+    return this.http.get<number>(`${this.apiUrl}/count/${postId}`);
+  }
 }

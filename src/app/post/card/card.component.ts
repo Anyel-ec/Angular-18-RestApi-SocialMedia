@@ -20,7 +20,7 @@ import { LikeSpringService, Like } from '../../services/spring-boot/like-spring.
   selector: 'app-card',
   standalone: true,
   imports: [MatCardModule, MatIconModule, MatMenuModule, MatButtonModule, CommonModule, CommentsComponent, FormsModule],
-  providers: [CommentSpringService, PostDjangoService, UserDjangoService,SessionService, CategoryDjangoService, LikeSpringService],
+  providers: [CommentSpringService, PostDjangoService, UserDjangoService, SessionService, CategoryDjangoService, LikeSpringService],
   templateUrl: './card.component.html',
   styleUrls: ['./card.component.scss']
 })
@@ -45,12 +45,12 @@ export class CardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.currentUser = this.sessionService.getUser(); // Obtener el usuario actual al inicializar el componente
     this.loadPosts();
     this.loadCategories();
     this.newPostService.postCreated$.subscribe(() => {
       this.loadPosts();
     });
-    this.currentUser = this.sessionService.getUser(); // Obtener el usuario actual al inicializar el componente
   }
 
   toggleComments(postId: number) {
@@ -69,7 +69,6 @@ export class CardComponent implements OnInit {
     );
   }
 
-
   expandImage(post: any) {
     post.isImageExpanded = true;
   }
@@ -77,8 +76,6 @@ export class CardComponent implements OnInit {
   closeImage(post: any) {
     post.isImageExpanded = false;
   }
-
-
 
   startEdit(post: any) {
     this.editingPost = { ...post };
@@ -118,6 +115,23 @@ export class CardComponent implements OnInit {
       timer: 1500,
       showConfirmButton: false
     });
+    this.commentService.deleteCommentsByPostId(postId).subscribe(
+      () => {
+        console.log(`Comentarios eliminados para la publicación ${postId}`);
+      },
+      (error: any) => {
+        console.error(`Error eliminando comentarios para la publicación ${postId}:`, error);
+      }
+    );
+
+    this.likeService.deleteLikesByPostId(postId).subscribe(
+      () => {
+        console.log(`Likes eliminados para la publicación ${postId}`);
+      },
+      (error: any) => {
+        console.error(`Error eliminando likes para la publicación ${postId}:`, error);
+      }
+    );
 
     this.postService.deletePost(postId).subscribe(
       () => {
@@ -213,6 +227,16 @@ export class CardComponent implements OnInit {
     );
   }
 
+  updateCommentCount(post: any) {
+    this.commentService.countCommentsByPostId(post.id).subscribe(
+      (count: number) => {
+        post.commentCount = count;
+      },
+      (error: any) => {
+        console.error(`Error updating comment count for post ${post.id}:`, error);
+      }
+    );
+  }
 
   getImageUrl(imagePath: string): any {
     return this.sanitizer.bypassSecurityTrustUrl('http://localhost:8000' + imagePath);
@@ -259,9 +283,4 @@ export class CardComponent implements OnInit {
       }
     );
   }
-
-
-
-
 }
-

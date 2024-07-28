@@ -56,7 +56,7 @@
               </div>
             </div>
             <div *ngIf="showComments && expandedPostId === post.id">
-              <app-comments [postId]="post.id"></app-comments>
+              <app-comments [postId]="post.id" (commentAdded)="updateCommentCount(post)"></app-comments>
             </div>
           </mat-card-content>
         </mat-card>

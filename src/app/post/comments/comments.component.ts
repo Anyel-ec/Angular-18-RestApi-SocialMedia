@@ -1,50 +1,55 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 import { CommentSpringService, Comment, CommentResponse } from '../../services/spring-boot/comment-spring.service';
 import { UserSpringService, User } from '../../services/spring-boot/user-spring.service';
+import { SessionService } from '../../services/shared/session.service';
 
 @Component({
   selector: 'app-comments',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  providers: [CommentSpringService, UserSpringService],
+  providers: [CommentSpringService, UserSpringService, SessionService],
   templateUrl: './comments.component.html',
   styleUrls: ['./comments.component.scss']
 })
 export class CommentsComponent implements OnInit {
-  @Input() postId!: number; // Añadir esta línea para aceptar el postId como entrada
+  @Input() postId!: number;
+  @Output() commentAdded = new EventEmitter<void>();
 
   comments: Comment[] = [];
   newComment: string = '';
   newReply: string = '';
+  editingComment: Comment | null = null;
   expandedCommentId: string | null = null;
   userMap: { [key: number]: string } = {};
   validUserIds: Set<number> = new Set();
+  currentUser: any;
 
   constructor(
     private commentService: CommentSpringService,
-    private userService: UserSpringService
+    private userService: UserSpringService,
+    private sessionService: SessionService
   ) {}
 
   ngOnInit() {
     this.loadAllUsers();
+    this.currentUser = this.sessionService.getUser();
+    this.loadComments();
   }
 
   loadComments() {
     this.commentService.getCommentsByPostId(this.postId).subscribe(
       (data: Comment[]) => {
         this.comments = data;
-        console.log('Comments:', data);
+        console.log('Comments loaded:', data);
 
         const userIds = [
           ...new Set(
             data.map(comment => comment.userId).concat(data.flatMap(comment => comment.responses.map(reply => reply.userId)))
           )
         ];
-
-        console.log('User IDs:', userIds);
 
         const validUserIds = userIds.filter(id => this.validUserIds.has(id));
         if (validUserIds.length > 0) {
@@ -54,61 +59,49 @@ export class CommentsComponent implements OnInit {
           });
         }
 
-        // Obtener y mostrar el número de comentarios por cada postId encontrado en los comentarios
         const postIds = [...new Set(data.map(comment => comment.postId))];
         postIds.forEach(postId => {
           this.commentService.countCommentsByPostId(postId).subscribe(
-            count => {
-              console.log(`Número de comentarios para el post ${postId}:`, count);
-            },
-            error => {
-              console.error(`Error fetching comment count for post ${postId}:`, error);
-            }
+            count => console.log(`Number of comments for post ${postId}:`, count),
+            error => console.error(`Error fetching comment count for post ${postId}:`, error)
           );
         });
-
-
       },
-      error => {
-        console.error('Error fetching comments:', error);
-      }
+      error => console.error('Error fetching comments:', error)
     );
   }
 
   loadAllUsers() {
     this.userService.getAllUsers().subscribe(
       (data: User[]) => {
-        console.log('All users:', data);
         data.forEach(user => {
           this.validUserIds.add(user.id);
           this.userMap[user.id] = user.name;
         });
-        this.loadComments(); // Load comments after fetching all users
+        this.loadComments();
       },
-      error => {
-        console.error('Error fetching all users:', error);
-      }
+      error => console.error('Error fetching all users:', error)
     );
   }
 
   handleAddComment() {
     if (this.newComment.trim() !== '') {
       const newComment: Comment = {
-        id: '', // Dejar vacío, el backend asignará uno
-        postId: this.postId, // Aquí asignamos el postId del componente
-        userId: 4, // Cambiar a un userId válido
+        postId: this.postId,
+        userId: this.currentUser.id,
         content: this.newComment,
         timeCreated: new Date().toISOString(),
         responses: []
       };
+      console.log('Adding comment:', newComment);
       this.commentService.addComment(newComment).subscribe(
         comment => {
           this.comments.push(comment);
           this.newComment = '';
+          this.commentAdded.emit();
+          console.log('Comment added:', comment);
         },
-        error => {
-          console.error('Error adding comment:', error);
-        }
+        error => console.error('Error adding comment:', error)
       );
     }
   }
@@ -117,45 +110,68 @@ export class CommentsComponent implements OnInit {
     const comment = this.comments.find(c => c.id === commentId);
     if (comment && this.newReply.trim() !== '') {
       const newReply: CommentResponse = {
-        id: '', // Dejar vacío, el backend asignará uno
         commentId: commentId,
-        userId: 4, // Cambiar a un userId válido
+        userId: this.currentUser.id,
         content: this.newReply,
         timeCreated: new Date().toISOString()
       };
-      comment.responses.push(newReply);
-      this.commentService.updateComment(commentId, comment).subscribe(
-        () => {
+      console.log('Adding reply:', newReply);
+      this.commentService.addResponse(commentId, newReply).subscribe(
+        updatedComment => {
+          const index = this.comments.findIndex(c => c.id === commentId);
+          this.comments[index] = updatedComment;
           this.newReply = '';
+          console.log('Reply added:', newReply);
         },
-        error => {
-          console.error('Error adding reply:', error);
-        }
+        error => console.error('Error adding reply:', error)
       );
     }
   }
 
-  handleReply(commentId: string) {
-    // Implement reply logic
+  handleEdit(comment: Comment) {
+    this.editingComment = { ...comment };
+    console.log('Editing comment:', this.editingComment);
   }
 
-  handleEdit(commentId: string) {
-    // Implement edit logic
+  handleSaveEdit() {
+    if (this.editingComment) {
+      const commentId = this.editingComment.id || ''; // Asegurarse de que id no sea undefined
+      if (commentId) {
+        console.log('Saving edited comment:', this.editingComment);
+        this.commentService.updateComment(commentId, this.editingComment).subscribe(
+          updatedComment => {
+            const index = this.comments.findIndex(c => c.id === this.editingComment!.id);
+            this.comments[index] = updatedComment;
+            this.editingComment = null;
+            console.log('Comment updated:', updatedComment);
+          },
+          error => console.error('Error updating comment:', error)
+        );
+      } else {
+        console.error('Error: Comment ID is undefined.');
+      }
+    }
+  }
+
+  handleCancelEdit() {
+    console.log('Cancelling edit for comment:', this.editingComment);
+    this.editingComment = null;
   }
 
   handleDelete(commentId: string) {
+    console.log('Deleting comment with ID:', commentId);
     this.commentService.deleteComment(commentId).subscribe(
       () => {
         this.comments = this.comments.filter(comment => comment.id !== commentId);
+        console.log('Comment deleted:', commentId);
       },
-      error => {
-        console.error('Error deleting comment:', error);
-      }
+      error => console.error('Error deleting comment:', error)
     );
   }
 
   handleExpand(commentId: string) {
     this.expandedCommentId = this.expandedCommentId === commentId ? null : commentId;
+    console.log('Expanding comment:', this.expandedCommentId);
   }
 
   getUserName(userId: number): string {
