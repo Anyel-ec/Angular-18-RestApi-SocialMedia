@@ -44,9 +44,10 @@
               </div>
             </div>
             <div class="flex items-center gap-4">
-              <button mat-icon-button>
-                <mat-icon>favorite_border</mat-icon>
+              <button mat-icon-button (click)="toggleLike(post)">
+                <mat-icon [ngClass]="{ 'liked': post.userLiked }">{{ post.userLiked ? 'favorite' : 'favorite_border' }}</mat-icon>
               </button>
+              <span>{{ post.likeCount || 0 }}</span>
               <div class="flex items-center">
                 <button mat-icon-button (click)="toggleComments(post.id)">
                   <mat-icon>comment</mat-icon>
@@ -58,7 +59,6 @@
               <app-comments [postId]="post.id"></app-comments>
             </div>
           </mat-card-content>
-
         </mat-card>
       </div>
     </div>

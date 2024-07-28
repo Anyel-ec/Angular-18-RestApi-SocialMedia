@@ -14,12 +14,13 @@ import { NewPostService } from '../../services/django/new-post.service';
 import Swal from 'sweetalert2';
 import { SessionService } from '../../services/shared/session.service';
 import { CommentSpringService } from '../../services/spring-boot/comment-spring.service';
+import { LikeSpringService, Like } from '../../services/spring-boot/like-spring.service';
 
 @Component({
   selector: 'app-card',
   standalone: true,
   imports: [MatCardModule, MatIconModule, MatMenuModule, MatButtonModule, CommonModule, CommentsComponent, FormsModule],
-  providers: [CommentSpringService, PostDjangoService, UserDjangoService,SessionService, CategoryDjangoService],
+  providers: [CommentSpringService, PostDjangoService, UserDjangoService,SessionService, CategoryDjangoService, LikeSpringService],
   templateUrl: './card.component.html',
   styleUrls: ['./card.component.scss']
 })
@@ -39,6 +40,7 @@ export class CardComponent implements OnInit {
     private categoryDjangoService: CategoryDjangoService,
     private newPostService: NewPostService,
     private commentService: CommentSpringService,
+    private likeService: LikeSpringService,
     private sessionService: SessionService // Inyectar el servicio de sesión
   ) {}
 
@@ -137,7 +139,9 @@ export class CardComponent implements OnInit {
       (data: any[]) => {
         this.posts = data.map(post => ({
           ...post,
-          isImageExpanded: false
+          isImageExpanded: false,
+          userLiked: false,
+          likeCount: 0
         })).reverse();
 
         this.posts.forEach(post => {
@@ -168,6 +172,26 @@ export class CardComponent implements OnInit {
               console.error(`Error fetching comment count for post ${post.id}:`, error);
             }
           );
+
+          this.likeService.countLikesByPostId(post.id).subscribe(
+            (count: number) => {
+              post.likeCount = count;
+              console.log(`Número de likes para el post ${post.id}:`, count);
+            },
+            (error: any) => {
+              console.error(`Error fetching like count for post ${post.id}:`, error);
+            }
+          );
+
+          this.likeService.getLikesByPostId(post.id).subscribe(
+            (likes: Like[]) => {
+              const userLike = likes.find(like => like.userId === this.currentUser.id);
+              post.userLiked = !!userLike;
+            },
+            (error: any) => {
+              console.error(`Error fetching likes for post ${post.id}:`, error);
+            }
+          );
         });
       },
       (error: any) => {
@@ -175,6 +199,20 @@ export class CardComponent implements OnInit {
       }
     );
   }
+
+  toggleLike(post: any) {
+    const userLike = post.userLiked;
+    this.likeService.addOrUpdateLike(post.id, this.currentUser.id, !userLike).subscribe(
+      (like: Like) => {
+        post.userLiked = !userLike;
+        post.likeCount += post.userLiked ? 1 : -1;
+      },
+      (error: any) => {
+        console.error(`Error toggling like for post ${post.id}:`, error);
+      }
+    );
+  }
+
 
   getImageUrl(imagePath: string): any {
     return this.sanitizer.bypassSecurityTrustUrl('http://localhost:8000' + imagePath);
@@ -221,6 +259,9 @@ export class CardComponent implements OnInit {
       }
     );
   }
+
+
+
 
 }
 
