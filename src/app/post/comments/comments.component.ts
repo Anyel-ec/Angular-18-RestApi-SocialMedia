@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 import { CommentSpringService, Comment, CommentResponse } from '../../services/spring-boot/comment-spring.service';
@@ -14,6 +14,8 @@ import { UserSpringService, User } from '../../services/spring-boot/user-spring.
   styleUrls: ['./comments.component.scss']
 })
 export class CommentsComponent implements OnInit {
+  @Input() postId!: number; // Añadir esta línea para aceptar el postId como entrada
+
   comments: Comment[] = [];
   newComment: string = '';
   newReply: string = '';
@@ -31,7 +33,7 @@ export class CommentsComponent implements OnInit {
   }
 
   loadComments() {
-    this.commentService.getComments().subscribe(
+    this.commentService.getCommentsByPostId(this.postId).subscribe(
       (data: Comment[]) => {
         this.comments = data;
         console.log('Comments:', data);
@@ -65,7 +67,7 @@ export class CommentsComponent implements OnInit {
           );
         });
 
-        
+
       },
       error => {
         console.error('Error fetching comments:', error);
@@ -93,7 +95,7 @@ export class CommentsComponent implements OnInit {
     if (this.newComment.trim() !== '') {
       const newComment: Comment = {
         id: '', // Dejar vacío, el backend asignará uno
-        postId: 1, // Aquí puedes asignar el postId correspondiente
+        postId: this.postId, // Aquí asignamos el postId del componente
         userId: 4, // Cambiar a un userId válido
         content: this.newComment,
         timeCreated: new Date().toISOString(),

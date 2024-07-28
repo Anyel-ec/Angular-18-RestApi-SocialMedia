@@ -48,44 +48,17 @@
                 <mat-icon>favorite_border</mat-icon>
               </button>
               <div class="flex items-center">
-                <button mat-icon-button (click)="toggleComments()">
+                <button mat-icon-button (click)="toggleComments(post.id)">
                   <mat-icon>comment</mat-icon>
                 </button>
                 <span>{{ post.commentCount || 0 }}</span>
               </div>
             </div>
-            <div *ngIf="showComments">
-              <app-comments></app-comments>
+            <div *ngIf="showComments && expandedPostId === post.id">
+              <app-comments [postId]="post.id"></app-comments>
             </div>
           </mat-card-content>
 
-          <mat-card-content class="p-6 space-y-4" *ngIf="editingPost && editingPost.id === post.id">
-            <form (ngSubmit)="savePost()">
-              <div class="grid gap-4">
-                <div class="grid gap-2">
-                  <label for="title" class="label">Título</label>
-                  <input id="title" [(ngModel)]="editingPost.title" name="title" class="input"/>
-                  <label for="category" class="label">Categoría</label>
-                  <select id="category" [(ngModel)]="editingPost.category_id" name="category" class="input">
-                    <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
-                  </select>
-                </div>
-                <div class="grid gap-2">
-                  <label for="description" class="label">Descripción</label>
-                  <textarea id="description" [(ngModel)]="editingPost.content" name="description" class="input"></textarea>
-                </div>
-                <div class="grid gap-2">
-                  <label for="image" class="label">Imagen</label>
-                  <input type="file" id="image" (change)="onFileSelected($event)" class="input"/>
-                  <img *ngIf="imagePreview" [src]="imagePreview" alt="Vista previa de la imagen" class="object-cover w-full h-full mt-2"/>
-                </div>
-                <div class="flex justify-end gap-4">
-                  <button type="button" (click)="cancelEdit()" class="btn">Cancelar</button>
-                  <button type="submit" class="btn btn-primary">Guardar</button>
-                </div>
-              </div>
-            </form>
-          </mat-card-content>
         </mat-card>
       </div>
     </div>

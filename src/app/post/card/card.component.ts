@@ -26,7 +26,7 @@ import { CommentSpringService } from '../../services/spring-boot/comment-spring.
 export class CardComponent implements OnInit {
   showComments: boolean = false;
   posts: any[] = [];
-
+  expandedPostId: number | null = null;
   editingPost: any = null;
   categories: any[] = [];
   imagePreview: string | ArrayBuffer | null = null;
@@ -51,6 +51,11 @@ export class CardComponent implements OnInit {
     this.currentUser = this.sessionService.getUser(); // Obtener el usuario actual al inicializar el componente
   }
 
+  toggleComments(postId: number) {
+    this.showComments = !this.showComments;
+    this.expandedPostId = this.showComments ? postId : null;
+  }
+
   loadCategories(): void {
     this.categoryDjangoService.getAllCategories().subscribe(
       (categories: any[]) => {
@@ -62,6 +67,7 @@ export class CardComponent implements OnInit {
     );
   }
 
+
   expandImage(post: any) {
     post.isImageExpanded = true;
   }
@@ -70,9 +76,7 @@ export class CardComponent implements OnInit {
     post.isImageExpanded = false;
   }
 
-  toggleComments() {
-    this.showComments = !this.showComments;
-  }
+
 
   startEdit(post: any) {
     this.editingPost = { ...post };
