@@ -22,6 +22,7 @@ export class CommentsComponent implements OnInit {
   newComment: string = '';
   newReply: string = '';
   editingComment: Comment | null = null;
+  editingResponse: CommentResponse | null = null;
   expandedCommentId: string | null = null;
   userMap: { [key: number]: string } = {};
   validUserIds: Set<number> = new Set();
@@ -133,9 +134,14 @@ export class CommentsComponent implements OnInit {
     console.log('Editing comment:', this.editingComment);
   }
 
+  handleEditResponse(reply: CommentResponse) {
+    this.editingResponse = { ...reply };
+    console.log('Editing response:', this.editingResponse);
+  }
+
   handleSaveEdit() {
     if (this.editingComment) {
-      const commentId = this.editingComment.id || ''; // Asegurarse de que id no sea undefined
+      const commentId = this.editingComment.id ?? ''; // Usar la coalescencia nula para garantizar un string
       if (commentId) {
         console.log('Saving edited comment:', this.editingComment);
         this.commentService.updateComment(commentId, this.editingComment).subscribe(
@@ -153,9 +159,29 @@ export class CommentsComponent implements OnInit {
     }
   }
 
+  handleSaveEditResponse(commentId: string, responseId: string) {
+    if (this.editingResponse) {
+      console.log('Saving edited response:', this.editingResponse);
+      this.commentService.updateResponse(commentId, responseId, this.editingResponse).subscribe(
+        updatedComment => {
+          const index = this.comments.findIndex(c => c.id === commentId);
+          this.comments[index] = updatedComment;
+          this.editingResponse = null;
+          console.log('Response updated:', updatedComment);
+        },
+        error => console.error('Error updating response:', error)
+      );
+    }
+  }
+
   handleCancelEdit() {
     console.log('Cancelling edit for comment:', this.editingComment);
     this.editingComment = null;
+  }
+
+  handleCancelEditResponse() {
+    console.log('Cancelling edit for response:', this.editingResponse);
+    this.editingResponse = null;
   }
 
   handleDelete(commentId: string) {
@@ -166,6 +192,18 @@ export class CommentsComponent implements OnInit {
         console.log('Comment deleted:', commentId);
       },
       error => console.error('Error deleting comment:', error)
+    );
+  }
+
+  handleDeleteResponse(commentId: string, responseId: string) {
+    console.log('Deleting response with ID:', responseId);
+    this.commentService.deleteResponse(commentId, responseId).subscribe(
+      updatedComment => {
+        const index = this.comments.findIndex(c => c.id === commentId);
+        this.comments[index] = updatedComment;
+        console.log('Response deleted:', updatedComment);
+      },
+      error => console.error('Error deleting response:', error)
     );
   }
 

@@ -59,4 +59,13 @@ export class CommentSpringService {
   countCommentsByPostId(postId: number): Observable<number> {
     return this.http.get<number>(`${this.apiUrl}/count/${postId}`);
   }
+
+  updateResponse(commentId: string, responseId: string, updatedResponse: CommentResponse): Observable<Comment> {
+    return this.http.put<Comment>(`${this.apiUrl}/${commentId}/response/${responseId}/update`, updatedResponse);
+  }
+
+  deleteResponse(commentId: string, responseId: string): Observable<Comment> {
+    return this.http.delete<Comment>(`${this.apiUrl}/${commentId}/response/${responseId}/delete`);
+  }
+
 }
