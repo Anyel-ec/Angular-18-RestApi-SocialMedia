@@ -43,15 +43,6 @@ export class CommentSpringService {
     return this.http.post<Comment>(`${this.apiUrl}/save`, comment);
   }
 
-  updateComment(id: string, comment: Comment): Observable<Comment> {
-    return this.http.put<Comment>(`${this.apiUrl}/${id}/update`, comment);
-  }
-
-  deleteComment(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}/delete`);
-  }
-
-
   deleteCommentsByPostId(postId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/post/${postId}/delete`);
   }
@@ -60,12 +51,21 @@ export class CommentSpringService {
     return this.http.get<number>(`${this.apiUrl}/count/${postId}`);
   }
 
-  updateResponse(commentId: string, responseId: string, updatedResponse: CommentResponse): Observable<Comment> {
-    return this.http.put<Comment>(`${this.apiUrl}/${commentId}/response/${responseId}/update`, updatedResponse);
+  updateComment(id: string, comment: Comment, userId: number): Observable<Comment> {
+    return this.http.put<Comment>(`${this.apiUrl}/${id}/update?userId=${userId}`, comment);
   }
 
-  deleteResponse(commentId: string, responseId: string): Observable<Comment> {
-    return this.http.delete<Comment>(`${this.apiUrl}/${commentId}/response/${responseId}/delete`);
+  deleteComment(id: string, userId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}/delete?userId=${userId}`);
   }
+
+  updateResponse(commentId: string, responseId: string, response: CommentResponse, userId: number): Observable<Comment> {
+    return this.http.put<Comment>(`${this.apiUrl}/${commentId}/response/${responseId}/update?userId=${userId}`, response);
+  }
+
+  deleteResponse(commentId: string, responseId: string, userId: number): Observable<Comment> {
+    return this.http.delete<Comment>(`${this.apiUrl}/${commentId}/response/${responseId}/delete?userId=${userId}`);
+  }
+
 
 }

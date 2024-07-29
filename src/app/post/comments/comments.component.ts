@@ -139,12 +139,35 @@ export class CommentsComponent implements OnInit {
     console.log('Editing response:', this.editingResponse);
   }
 
+
+
+  handleCancelEdit() {
+    console.log('Cancelling edit for comment:', this.editingComment);
+    this.editingComment = null;
+  }
+
+  handleCancelEditResponse() {
+    console.log('Cancelling edit for response:', this.editingResponse);
+    this.editingResponse = null;
+  }
+
+
+
+  handleExpand(commentId: string) {
+    this.expandedCommentId = this.expandedCommentId === commentId ? null : commentId;
+    console.log('Expanding comment:', this.expandedCommentId);
+  }
+
+  getUserName(userId: number): string {
+    return this.userMap[userId] || 'Unknown User';
+  }
+
   handleSaveEdit() {
     if (this.editingComment) {
-      const commentId = this.editingComment.id ?? ''; // Usar la coalescencia nula para garantizar un string
+      const commentId = this.editingComment.id ?? ''; // Asegurarse de que id no sea undefined
       if (commentId) {
         console.log('Saving edited comment:', this.editingComment);
-        this.commentService.updateComment(commentId, this.editingComment).subscribe(
+        this.commentService.updateComment(commentId, this.editingComment, this.currentUser.id).subscribe(
           updatedComment => {
             const index = this.comments.findIndex(c => c.id === this.editingComment!.id);
             this.comments[index] = updatedComment;
@@ -162,7 +185,7 @@ export class CommentsComponent implements OnInit {
   handleSaveEditResponse(commentId: string, responseId: string) {
     if (this.editingResponse) {
       console.log('Saving edited response:', this.editingResponse);
-      this.commentService.updateResponse(commentId, responseId, this.editingResponse).subscribe(
+      this.commentService.updateResponse(commentId, responseId, this.editingResponse, this.currentUser.id).subscribe(
         updatedComment => {
           const index = this.comments.findIndex(c => c.id === commentId);
           this.comments[index] = updatedComment;
@@ -174,19 +197,9 @@ export class CommentsComponent implements OnInit {
     }
   }
 
-  handleCancelEdit() {
-    console.log('Cancelling edit for comment:', this.editingComment);
-    this.editingComment = null;
-  }
-
-  handleCancelEditResponse() {
-    console.log('Cancelling edit for response:', this.editingResponse);
-    this.editingResponse = null;
-  }
-
   handleDelete(commentId: string) {
     console.log('Deleting comment with ID:', commentId);
-    this.commentService.deleteComment(commentId).subscribe(
+    this.commentService.deleteComment(commentId, this.currentUser.id).subscribe(
       () => {
         this.comments = this.comments.filter(comment => comment.id !== commentId);
         console.log('Comment deleted:', commentId);
@@ -197,7 +210,7 @@ export class CommentsComponent implements OnInit {
 
   handleDeleteResponse(commentId: string, responseId: string) {
     console.log('Deleting response with ID:', responseId);
-    this.commentService.deleteResponse(commentId, responseId).subscribe(
+    this.commentService.deleteResponse(commentId, responseId, this.currentUser.id).subscribe(
       updatedComment => {
         const index = this.comments.findIndex(c => c.id === commentId);
         this.comments[index] = updatedComment;
@@ -207,12 +220,5 @@ export class CommentsComponent implements OnInit {
     );
   }
 
-  handleExpand(commentId: string) {
-    this.expandedCommentId = this.expandedCommentId === commentId ? null : commentId;
-    console.log('Expanding comment:', this.expandedCommentId);
-  }
 
-  getUserName(userId: number): string {
-    return this.userMap[userId] || 'Unknown User';
-  }
 }
