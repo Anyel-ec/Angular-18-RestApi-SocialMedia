@@ -18,9 +18,12 @@ import { UserDjangoService } from '../../services/django/user-django.service';
 
 })
 export class LoginComponent {
-
   isSignUp: boolean = false;
   registerForm: FormGroup;
+  genders: any[] = [];
+  provinces: any[] = [];
+  showPassword: boolean = false;
+  showLoginPassword: boolean = false;
 
   constructor(
     private sessionService: SessionService,
@@ -33,9 +36,30 @@ export class LoginComponent {
       email: ['', [Validators.required, Validators.email, this.validarCorreoElectronico]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       phone: ['', [Validators.required, Validators.pattern('^[0-9]{10}$'), Validators.minLength(10), Validators.maxLength(10)]],
-      birthdate: ['', [Validators.required, this.minimumAgeValidator(16)]]
-
+      birthdate: ['', [Validators.required, this.minimumAgeValidator(16)]],
+      province: ['', [Validators.required]],
+      gender: ['', [Validators.required]],
+      status: [2] // Hidden field with default value 2
     });
+  }
+
+  ngOnInit(): void {
+    this.loadGenders();
+    this.loadProvinces();
+  }
+
+  private loadGenders(): void {
+    this.userDjangoService.getAllGenders().subscribe(
+      data => this.genders = data,
+      error => console.error('Error loading genders:', error)
+    );
+  }
+
+  private loadProvinces(): void {
+    this.userDjangoService.getAllProvinces().subscribe(
+      data => this.provinces = data,
+      error => console.error('Error loading provinces:', error)
+    );
   }
 
   private validarCorreoElectronico(control: AbstractControl): ValidationErrors | null {
@@ -44,11 +68,7 @@ export class LoginComponent {
       return null;
     }
     const expresionRegular = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-    if (expresionRegular.test(correo)) {
-      return null;
-    } else {
-      return { correoInvalido: true };
-    }
+    return expresionRegular.test(correo) ? null : { correoInvalido: true };
   }
 
   private validarNombreCompleto(control: AbstractControl): ValidationErrors | null {
@@ -56,17 +76,11 @@ export class LoginComponent {
     if (!nombre) {
       return null;
     }
-
     if (nombre.length < 3) {
       return { nombreInvalido: true };
     }
-
     const expresionRegular = /^[a-zA-ZÀ-ÿ\u00f1\u00d1\u00e1\u00e9\u00ed\u00f3\u00fa\u0020\u0027\u002E\u002D]*$/;
-    if (expresionRegular.test(nombre)) {
-      return null;
-    } else {
-      return { nombreInvalido: true };
-    }
+    return expresionRegular.test(nombre) ? null : { nombreInvalido: true };
   }
 
   validateName(): void {
@@ -88,17 +102,12 @@ export class LoginComponent {
       const today = new Date();
       let age = today.getFullYear() - birthdate.getFullYear();
       const monthDifference = today.getMonth() - birthdate.getMonth();
-
       if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthdate.getDate())) {
         age--;
       }
-
       return age >= minAge ? null : { 'minimumAge': true };
     };
   }
-
-
-  ngOnInit(): void {}
 
   showSignUp(): void {
     this.isSignUp = true;
@@ -117,17 +126,12 @@ export class LoginComponent {
           title: 'Inicio de sesión correcto!',
           text: response.message,
         });
-
-        // Obtener el usuario por email y guardarlo en la sesión
         this.userDjangoService.getUserByEmail(email).subscribe(
           userData => {
-            console.log('Usuario obtenido:', userData);
-            this.sessionService.setUser(userData); // Aquí solo se debe guardar el usuario actualmente logueado
+            this.sessionService.setUser(userData);
             this.router.navigate(['/inicio']);
           },
-          error => {
-            console.error('Error obteniendo usuario:', error);
-          }
+          error => console.error('Error obteniendo usuario:', error)
         );
       },
       error => {
@@ -141,15 +145,21 @@ export class LoginComponent {
     );
   }
 
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+
+  toggleLoginPasswordVisibility(): void {
+    this.showLoginPassword = !this.showLoginPassword;
+  }
   onRegisterFormSubmit(event: Event): void {
     event.preventDefault();
     if (this.registerForm.valid) {
       const user = this.registerForm.value;
-
       this.userDjangoService.getVerifyExitsUser(user.email).subscribe(
         response => {
-          // Si la respuesta es 200, el usuario ya existe
-          if (response.message === 'User exists') {
+          if (response.message === 'Usuario existe') {
             Swal.fire({
               icon: 'error',
               title: 'Error de registro',
@@ -158,9 +168,8 @@ export class LoginComponent {
           }
         },
         error => {
-          // Si la respuesta es 404, el usuario no existe y se permite registrar
           if (error.status === 404) {
-            this.userDjangoService.register(user).subscribe(
+            this.userDjangoService.createUser(user).subscribe(
               response => {
                 Swal.fire({
                   icon: 'success',
@@ -168,7 +177,7 @@ export class LoginComponent {
                   text: response.message,
                 });
                 this.showSignIn();
-                this.registerForm.reset(); // limpia los campos del formulario
+                this.registerForm.reset();
               },
               registrationError => {
                 Swal.fire({
@@ -191,7 +200,4 @@ export class LoginComponent {
       );
     }
   }
-
-
-
 }

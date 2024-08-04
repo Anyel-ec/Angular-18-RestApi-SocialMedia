@@ -7,53 +7,69 @@
         <small *ngIf="email.errors?.['required']">El correo electrónico es obligatorio.</small>
         <small *ngIf="email.errors?.['email']">Debe ser un formato de correo válido.</small>
       </div>
-
-      <input type="password" #password="ngModel" ngModel name="password" placeholder="Contraseña" required minlength="6" />
+      <div class="password-container">
+        <input [type]="showLoginPassword ? 'text' : 'password'" #password="ngModel" ngModel name="password" placeholder="Contraseña" required minlength="6" />
+        <button type="button" (click)="toggleLoginPasswordVisibility()">
+          <i class="fa" [ngClass]="showLoginPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+        </button>
+      </div>
       <div *ngIf="password.invalid && (password.dirty || password.touched)" class="small-error">
         <small *ngIf="password.errors?.['required']">La contraseña es obligatoria.</small>
         <small *ngIf="password.errors?.['minlength']">La contraseña debe tener al menos 6 caracteres.</small>
       </div>
 
-      <!-- <a href="#">¿Olvidaste tu contraseña?</a> -->
-
       <button type="submit" [disabled]="loginForm.invalid">Iniciar Sesión</button>
     </form>
   </div>
 
-
-
-
   <div class="form-container sign-up-container">
     <form [formGroup]="registerForm" (ngSubmit)="onRegisterFormSubmit($event)">
-      <h1>Crear Cuenta</h1>
+      <strong style="font-size: 30px;">Crear Cuenta</strong>
       <input type="text" formControlName="name" placeholder="Nombre" (input)="validateName()" />
       <div *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched" class="small-error">
         <small *ngIf="registerForm.get('name')?.errors?.['required']">El nombre es obligatorio.</small>
         <small *ngIf="registerForm.get('name')?.errors?.['nombreInvalido']">El nombre solo puede contener letras y debe tener al menos 3 caracteres.</small>
       </div>
-
       <input type="email" formControlName="email" placeholder="Correo Electrónico" />
       <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="small-error">
         <small *ngIf="registerForm.get('email')?.errors?.['required']">El correo electrónico es obligatorio.</small>
         <small *ngIf="registerForm.get('email')?.errors?.['correoInvalido']">Debe ser un formato de correo válido.</small>
       </div>
-
-      <input type="password" formControlName="password" placeholder="Contraseña" />
+      <div class="password-container">
+        <input [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="Contraseña" />
+        <button type="button" (click)="togglePasswordVisibility()">
+          <i class="fa" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+        </button>
+      </div>
       <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="small-error">
         <small *ngIf="registerForm.get('password')?.errors?.['required']">La contraseña es obligatoria.</small>
         <small *ngIf="registerForm.get('password')?.errors?.['minlength']">La contraseña debe tener al menos 6 caracteres.</small>
       </div>
-
       <input type="text" formControlName="phone" placeholder="Teléfono" minlength="10" maxlength="10" (input)="validatePhone($event)" />
       <div *ngIf="registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched" class="small-error">
         <small *ngIf="registerForm.get('phone')?.errors?.['required']">El número de teléfono es obligatorio.</small>
         <small *ngIf="registerForm.get('phone')?.errors?.['minlength'] || registerForm.get('phone')?.errors?.['maxlength']">Debe tener exactamente 10 dígitos</small>
       </div>
-
       <input type="date" formControlName="birthdate" placeholder="Fecha de Nacimiento" />
       <div *ngIf="registerForm.get('birthdate')?.invalid && registerForm.get('birthdate')?.touched" class="small-error">
         <small *ngIf="registerForm.get('birthdate')?.errors?.['required']">La fecha de nacimiento es obligatoria.</small>
         <small *ngIf="registerForm.get('birthdate')?.errors?.['minimumAge']">Debes tener al menos 16 años.</small>
+      </div>
+
+      <select formControlName="province" required>
+        <option value="">Seleccione una provincia</option>
+        <option *ngFor="let province of provinces" [value]="province.id">{{ province.name }}</option>
+      </select>
+      <div *ngIf="registerForm.get('province')?.invalid && registerForm.get('province')?.touched" class="small-error">
+        <small>La provincia es obligatoria.</small>
+      </div>
+
+      <select formControlName="gender" required>
+        <option value="">Seleccione un género</option>
+        <option *ngFor="let gender of genders" [value]="gender.id">{{ gender.gender }}</option>
+      </select>
+      <div *ngIf="registerForm.get('gender')?.invalid && registerForm.get('gender')?.touched" class="small-error">
+        <small>El género es obligatorio.</small>
       </div>
 
       <button type="submit">Registrarse</button>

@@ -7,8 +7,19 @@ import { Observable } from 'rxjs';
 })
 export class UserDjangoService {
   private apiUrl = 'http://localhost:8000/api/v2/users/';
+  private genderUrl = 'http://localhost:8000/api/v2/genders/';
+  private provinceUrl = 'http://localhost:8000/api/v2/provinces/';
 
   constructor(private http: HttpClient) { }
+
+
+  getAllGenders(): Observable<any[]> {
+    return this.http.get<any[]>(this.genderUrl);
+  }
+
+  getAllProvinces(): Observable<any[]> {
+    return this.http.get<any[]>(this.provinceUrl);
+  }
 
   getUsers(): Observable<any> {
     return this.http.get<any>(this.apiUrl);
@@ -20,8 +31,8 @@ export class UserDjangoService {
     return this.http.post<any>(loginUrl, body);
   }
 
-  register(user: any): Observable<any> {
-    return this.http.post<any>(this.apiUrl, user);
+  createUser(userData: any): Observable<any> {
+    return this.http.post<any>(this.apiUrl, userData);
   }
 
   getUserByEmail(email: string): Observable<any> {

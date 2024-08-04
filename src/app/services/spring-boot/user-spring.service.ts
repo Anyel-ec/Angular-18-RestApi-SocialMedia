@@ -15,7 +15,7 @@ export interface User {
 })
 export class UserSpringService {
 
-  private apiUrl = 'http://localhost:8080/restConsumer';
+  private apiUrl = 'http://localhost:8081/springboot/restConsumer';
 
   constructor(private http: HttpClient) {}
 
