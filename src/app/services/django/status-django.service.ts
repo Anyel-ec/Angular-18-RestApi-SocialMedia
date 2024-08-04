@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class StatusDjangoService {
-  private apiUrl = 'http://localhost:8000/api/v2/statuses/';
+  private apiUrl = 'http://localhost:8081/django/api/v2/statuses/';
 
   constructor(private http: HttpClient) { }
 

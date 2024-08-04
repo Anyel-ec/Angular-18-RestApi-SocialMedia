@@ -6,9 +6,9 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class UserDjangoService {
-  private apiUrl = 'http://localhost:8000/api/v2/users/';
-  private genderUrl = 'http://localhost:8000/api/v2/genders/';
-  private provinceUrl = 'http://localhost:8000/api/v2/provinces/';
+  private apiUrl = 'http://localhost:8081/django/api/v2/users/';
+  private genderUrl = 'http://localhost:8081/django/api/v2/genders/';
+  private provinceUrl = 'http://localhost:8081/django/api/v2/provinces/';
 
   constructor(private http: HttpClient) { }
 
@@ -48,7 +48,7 @@ export class UserDjangoService {
   }
 
   getVerifyExitsUser(email: string): Observable<any> {
-    const url = `${this.apiUrl}/verify_exist`;
+    const url = `${this.apiUrl}verify_exist/`;
     const body = { email };
     return this.http.post<any>(url, body);
   }

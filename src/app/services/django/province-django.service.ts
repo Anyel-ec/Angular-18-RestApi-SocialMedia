@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ProvinceDjangoService {
-  private apiUrl = 'http://localhost:8000/api/v2/provinces/';
+  private apiUrl = 'http://localhost:8081/django/api/v2/provinces/';
 
   constructor(private http: HttpClient) { }
 

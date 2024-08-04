@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
 import { PostDjangoService } from '../../services/django/post-django.service';
 import Swal from 'sweetalert2';
 import { SessionService } from '../../services/shared/session.service';
@@ -16,8 +16,9 @@ import { NewPostService } from '../../services/django/new-post.service';
   styleUrls: ['./post.component.scss'],
   providers: [PostDjangoService, SessionService, CategoryDjangoService] // Provee el servicio de publicaciones
 })
-
 export class PostComponent implements OnInit {
+  @ViewChild('postForm') postForm!: NgForm;
+
   post = {
     title: '',
     content: '',
@@ -74,9 +75,11 @@ export class PostComponent implements OnInit {
     }
   }
 
+  onSubmit(form: NgForm): void {
+    if (form.invalid) {
+      return;
+    }
 
-
-  onSubmit(): void {
     const formData = new FormData();
     formData.append('title', this.post.title);
     formData.append('content', this.post.content);
@@ -87,11 +90,12 @@ export class PostComponent implements OnInit {
     }
 
     this.postService.createPost(formData).subscribe(
+
       response => {
         console.log('Publicación creada exitosamente', response);
         Swal.fire('¡Éxito!', 'La publicación se creó correctamente', 'success');
         // Limpiar formulario después de éxito
-        this.resetForm();
+        this.resetForm(form);
         this.newPostService.notifyPostCreated(); // Notificar que se ha creado una nueva publicación
       },
       error => {
@@ -101,18 +105,10 @@ export class PostComponent implements OnInit {
     );
   }
 
-
-
   clearImagePreview(): void {
     this.imagePreview = null;
     this.post.image = undefined;
   }
-
-
-
-
-
-
 
   onDrop(event: DragEvent): void {
     event.preventDefault();
@@ -126,12 +122,13 @@ export class PostComponent implements OnInit {
     event.preventDefault();
   }
 
-  private resetForm(): void {
+  private resetForm(form: NgForm): void {
+    form.resetForm();
     this.post = { title: '', content: '', user_id: this.currentUser.id, category_id: 0, image: undefined };
     this.imagePreview = null;
   }
 
   onCancel(): void {
-    this.resetForm();
+    this.resetForm(this.postForm);
   }
 }

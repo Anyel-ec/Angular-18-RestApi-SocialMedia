@@ -6,20 +6,32 @@
     </div>
   </div>
   <div class="card-content">
-    <form (ngSubmit)="onSubmit()">
+    <form #postForm="ngForm" (ngSubmit)="onSubmit(postForm)">
       <div class="grid gap-4">
         <div class="grid gap-2">
           <label for="title">Título</label>
-          <input id="title" placeholder="Escribe un título" [(ngModel)]="post.title" name="title" class="input"/>
+          <input id="title" placeholder="Escribe un título" [(ngModel)]="post.title" name="title" class="input" required />
+          <div *ngIf="postForm.submitted && !postForm.controls['title']?.valid" class="small-error">
+            <small>El título es obligatorio.</small>
+          </div>
+
           <label for="category">Categoría</label>
-          <select id="category" name="category" [(ngModel)]="post.category_id" class="input">
+          <select id="category" name="category" [(ngModel)]="post.category_id" class="input" required>
             <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
           </select>
+          <div *ngIf="postForm.submitted && !postForm.controls['category']?.valid" class="small-error">
+            <small>La categoría es obligatoria.</small>
+          </div>
         </div>
+
         <div class="grid gap-2">
           <label for="description">Descripción</label>
-          <textarea id="description" placeholder="Escribe una descripción" [(ngModel)]="post.content" name="description" class="textarea min-h-[100px]"></textarea>
+          <textarea id="description" placeholder="Escribe una descripción" [(ngModel)]="post.content" name="description" class="textarea min-h-[100px]" required></textarea>
+          <div *ngIf="postForm.submitted && !postForm.controls['description']?.valid" class="small-error">
+            <small>La descripción es obligatoria.</small>
+          </div>
         </div>
+
         <div class="grid gap-2">
           <label>Imagen</label>
           <div class="image-container">
@@ -30,7 +42,7 @@
               <input type="file" (change)="onFileSelected($event)" hidden #fileInput>
             </div>
             <div *ngIf="imagePreview" class="image-preview">
-              <img [src]="imagePreview" alt="Imagen">
+              <img [src]="imagePreview" alt="Imagen" class="image-content">
               <div class="delete-button" (click)="clearImagePreview()">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                   <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -42,8 +54,12 @@
         </div>
       </div>
       <div class="card-footer flex justify-end gap-2">
-        <button type="button" class="button-outline" (click)="onCancel()">Cancelar</button>
-        <button type="submit" class="button">Publicar</button>
+        <button type="button" class="button-outline" (click)="onCancel()">
+          <i class="fa fa-times"></i>
+        </button>
+        <button type="submit" class="button" [disabled]="postForm.invalid" [ngClass]="{'disabled': postForm.invalid}">
+          <i class="fa fa-paper-plane"></i>
+        </button>
       </div>
     </form>
   </div>

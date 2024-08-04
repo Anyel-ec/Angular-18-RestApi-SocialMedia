@@ -1,5 +1,5 @@
 <div class="w-full max-w-2xl mx-auto space-y-6">
-  <h2 class="text-2xl font-bold">Comments</h2>
+  <h2 class="text-2xl font-bold">Comentarios</h2>
   <div class="space-y-4">
     <div *ngFor="let comment of comments" class="bg-card p-4 rounded-lg shadow-sm">
       <div class="flex items-start justify-between">
@@ -15,15 +15,15 @@
         <div class="flex items-center gap-2">
           <button *ngIf="comment.userId === currentUser.id" (click)="handleEdit(comment)" class="btn-icon">
             <i class="fas fa-edit"></i>
-            <span class="sr-only">Edit</span>
+            <span class="sr-only">Editar</span>
           </button>
           <button *ngIf="comment.userId === currentUser.id" (click)="handleDelete(comment.id ?? '')" class="btn-icon">
             <i class="fas fa-trash-alt"></i>
-            <span class="sr-only">Delete</span>
+            <span class="sr-only">Eliminar</span>
           </button>
           <button (click)="handleExpand(comment.id ?? '')" class="btn-icon">
             <i class="fas fa-chevron-down"></i>
-            <span class="sr-only">Expand</span>
+            <span class="sr-only">Expandir</span>
           </button>
         </div>
       </div>
@@ -33,8 +33,8 @@
       <div *ngIf="editingComment && editingComment.id === comment.id" class="mt-4 space-y-4">
         <textarea [(ngModel)]="editingComment.content" class="input"></textarea>
         <div class="flex items-center gap-2">
-          <button (click)="handleSaveEdit()" class="btn">Save</button>
-          <button (click)="handleCancelEdit()" class="btn">Cancel</button>
+          <button (click)="handleSaveEdit()" class="btn">Guardar</button>
+          <button (click)="handleCancelEdit()" class="btn">Cancelar</button>
         </div>
       </div>
       <div *ngIf="expandedCommentId === comment.id" class="mt-4 space-y-4">
@@ -54,29 +54,29 @@
           <div *ngIf="editingResponse && editingResponse.id === reply.id" class="mt-4 space-y-4">
             <textarea [(ngModel)]="editingResponse.content" class="input"></textarea>
             <div class="flex items-center gap-2">
-              <button (click)="handleSaveEditResponse(comment.id ?? '', reply.id ?? '')" class="btn">Save</button>
-              <button (click)="handleCancelEditResponse()" class="btn">Cancel</button>
+              <button (click)="handleSaveEditResponse(comment.id ?? '', reply.id ?? '')" class="btn">Guardar</button>
+              <button (click)="handleCancelEditResponse()" class="btn">Cancelar</button>
             </div>
           </div>
           <div class="flex items-center gap-2">
             <button *ngIf="reply.userId === currentUser.id" (click)="handleEditResponse(reply)" class="btn-icon">
               <i class="fas fa-edit"></i>
-              <span class="sr-only">Edit</span>
+              <span class="sr-only">Editar</span>
             </button>
             <button *ngIf="reply.userId === currentUser.id" (click)="handleDeleteResponse(comment.id ?? '', reply.id ?? '')" class="btn-icon">
               <i class="fas fa-trash-alt"></i>
-              <span class="sr-only">Delete</span>
+              <span class="sr-only">Eliminar</span>
             </button>
           </div>
         </div>
         <div class="flex items-center gap-2">
           <input
             type="text"
-            placeholder="Write a reply..."
+            placeholder="Escribe una respuesta..."
             [(ngModel)]="newReply"
             class="input"
           />
-          <button (click)="handleAddReply(comment.id ?? '')" class="btn">Reply</button>
+          <button (click)="handleAddReply(comment.id ?? '')" class="btn">Responder</button>
         </div>
       </div>
     </div>
@@ -84,10 +84,10 @@
   <div class="flex items-center gap-2">
     <input
       type="text"
-      placeholder="Write a new comment..."
+      placeholder="Escribe un nuevo comentario..."
       [(ngModel)]="newComment"
       class="input"
     />
-    <button (click)="handleAddComment()" class="btn">Add Comment</button>
+    <button (click)="handleAddComment()" class="btn">Agregar Comentario</button>
   </div>
 </div>

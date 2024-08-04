@@ -5,12 +5,13 @@ import { forkJoin } from 'rxjs';
 import { CommentSpringService, Comment, CommentResponse } from '../../services/spring-boot/comment-spring.service';
 import { UserSpringService, User } from '../../services/spring-boot/user-spring.service';
 import { SessionService } from '../../services/shared/session.service';
+import { UserDjangoService } from '../../services/django/user-django.service';
 
 @Component({
   selector: 'app-comments',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  providers: [CommentSpringService, UserSpringService, SessionService],
+  providers: [CommentSpringService, UserSpringService, SessionService, UserDjangoService],
   templateUrl: './comments.component.html',
   styleUrls: ['./comments.component.scss']
 })
@@ -30,7 +31,7 @@ export class CommentsComponent implements OnInit {
 
   constructor(
     private commentService: CommentSpringService,
-    private userService: UserSpringService,
+    private userService: UserDjangoService,
     private sessionService: SessionService
   ) {}
 
@@ -54,7 +55,7 @@ export class CommentsComponent implements OnInit {
 
         const validUserIds = userIds.filter(id => this.validUserIds.has(id));
         if (validUserIds.length > 0) {
-          const userRequests = validUserIds.map(id => this.userService.getUserByID(id));
+          const userRequests = validUserIds.map(id => this.userService.getUserById(id));
           forkJoin(userRequests).subscribe(users => {
             users.forEach(user => (this.userMap[user.id] = user.name));
           });
@@ -73,7 +74,7 @@ export class CommentsComponent implements OnInit {
   }
 
   loadAllUsers() {
-    this.userService.getAllUsers().subscribe(
+    this.userService.getUsers().subscribe(
       (data: User[]) => {
         data.forEach(user => {
           this.validUserIds.add(user.id);
