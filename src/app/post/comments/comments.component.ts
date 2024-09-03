@@ -31,7 +31,7 @@ export class CommentsComponent implements OnInit {
 
   constructor(
     private commentService: CommentSpringService,
-    private userService: UserDjangoService,
+    private userService: UserSpringService,
     private sessionService: SessionService
   ) {}
 
@@ -55,7 +55,7 @@ export class CommentsComponent implements OnInit {
 
         const validUserIds = userIds.filter(id => this.validUserIds.has(id));
         if (validUserIds.length > 0) {
-          const userRequests = validUserIds.map(id => this.userService.getUserById(id));
+          const userRequests = validUserIds.map(id => this.userService.getUserByID(id));
           forkJoin(userRequests).subscribe(users => {
             users.forEach(user => (this.userMap[user.id] = user.name));
           });
@@ -74,7 +74,7 @@ export class CommentsComponent implements OnInit {
   }
 
   loadAllUsers() {
-    this.userService.getUsers().subscribe(
+    this.userService.getAllUsers().subscribe(
       (data: User[]) => {
         data.forEach(user => {
           this.validUserIds.add(user.id);
@@ -165,7 +165,7 @@ export class CommentsComponent implements OnInit {
 
   handleSaveEdit() {
     if (this.editingComment) {
-      const commentId = this.editingComment.id ?? ''; // Asegurarse de que id no sea undefined
+      const commentId = this.editingComment.id ?? '';
       if (commentId) {
         console.log('Saving edited comment:', this.editingComment);
         this.commentService.updateComment(commentId, this.editingComment, this.currentUser.id).subscribe(
