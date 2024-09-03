@@ -6,9 +6,9 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class UserDjangoService {
-  private apiUrl = 'http://localhost:8081/django/api/v2/users/';
-  private genderUrl = 'http://localhost:8081/django/api/v2/genders/';
-  private provinceUrl = 'http://localhost:8081/django/api/v2/provinces/';
+  private apiUrl = 'http://localhost:8080/django/api/v2/users/';
+  private genderUrl = 'http://localhost:8080/django/api/v2/genders/';
+  private provinceUrl = 'http://localhost:8080/django/api/v2/provinces/';
 
   constructor(private http: HttpClient) { }
 

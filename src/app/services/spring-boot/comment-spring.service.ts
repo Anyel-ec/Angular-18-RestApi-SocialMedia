@@ -23,7 +23,7 @@ export interface Comment {
   providedIn: 'root'
 })
 export class CommentSpringService {
-  private apiUrl = 'http://localhost:8081/springboot/comment'; // URL del backend
+  private apiUrl = 'http://localhost:8080/springboot/comment'; // URL del backend
 
   constructor(private http: HttpClient) { }
 

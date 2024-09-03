@@ -14,7 +14,7 @@ export interface Like {
 })
 export class LikeSpringService {
 
-  private apiUrl = 'http://localhost:8081/springboot/like'; // URL base del backend
+  private apiUrl = 'http://localhost:8080/springboot/like'; // URL base del backend
 
   constructor(private http: HttpClient) {}
 

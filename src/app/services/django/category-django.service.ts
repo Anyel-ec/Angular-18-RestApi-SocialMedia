@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class CategoryDjangoService {
-  private apiUrl = 'http://localhost:8081/django/api/v2/categories/';
+  private apiUrl = 'http://localhost:8080/django/api/v2/categories/';
 
   constructor(private http: HttpClient) { }
 

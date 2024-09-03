@@ -7,7 +7,7 @@ import { catchError } from 'rxjs/operators';
 })
 export class PostDjangoService {
 
-  private baseUrl = 'http://localhost:8081/django/api/v2/posts/';
+  private baseUrl = 'http://localhost:8080/django/api/v2/posts/';
 
   constructor(private http: HttpClient) {}
 
